@@ -149,13 +149,13 @@ $(function() {
 
 
       }
-      // else {
-      //   // if already checked in today
-      //   return;
-      // }
+      else {
+        // if already checked in today
+        return;
+      }
 
-      function test() {
-        
+      function test2() {
+
       }
 
 
