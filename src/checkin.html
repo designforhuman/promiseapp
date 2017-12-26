@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Promise</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+
+  <body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalShareSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">공유 성공!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            축하합니다. 페이스북 공유에 성공하였습니다.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <nav class="sticky-top navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">
+        Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small>
+      </span>
+    </nav>
+
+    <div class="container">
+
+      <div class="goal my-3">
+        &nbsp;
+      </div>
+
+      <div class="reward mb-3">
+        &nbsp;
+      </div>
+
+      <div class="btn-container-checkin d-flex">
+        <button type="button" class="btn-checkin btn btn-primary btn-lg rounded-circle">V</button>
+      </div>
+
+      <div class="daystreak-container">
+        <h2 class="daystreak text-center">0</h2>
+      </div>
+
+      <div class="text-center">
+        ...
+      </div>
+
+
+
+
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/checkin.js"></script>
+  </body>
+</html>
