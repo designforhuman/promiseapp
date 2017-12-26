@@ -1,0 +1,20 @@
+{
+  "name": "promise",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.html",
+  "dependencies": {
+    "babel-eslint": "^8.0.3",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-react": "^7.5.1"
+  },
+  "devDependencies": {
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+  },
+  "author": "",
+  "license": "ISC"
+}
