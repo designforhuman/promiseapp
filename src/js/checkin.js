@@ -154,9 +154,8 @@ $(function() {
         return;
       }
 
-      function test2() {
+      // test
 
-      }
 
 
     });
