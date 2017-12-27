@@ -2,6 +2,10 @@
 
 $(function() {
 
+  // variables
+  var progressLog = [];
+
+
   // initial setup based on localStorage
 
 
@@ -56,6 +60,7 @@ $(function() {
           var lastCheckedInDate = val.lastCheckedInDate;
           var dayStreak = val.dayStreak;
           $('.dayStreak').text(dayStreak);
+          progressLog = val.progressLog;
 
           if(lastCheckedInDate == getToday()) {
             console.log("SAME!");
@@ -95,6 +100,7 @@ $(function() {
 
   function disableCheckInBtn() {
     $('.btn-checkin').prop('disabled', true);
+    $('.btn-checkin').removeClass('btn-primary');
     $('.btn-checkin').addClass('btn-secondary');
   }
 
@@ -102,6 +108,7 @@ $(function() {
   function enableCheckInBtn() {
     $('.btn-checkin').prop('disabled', false);
     $('.btn-checkin').removeClass('btn-secondary');
+    $('.btn-checkin').addClass('btn-primary');
   }
 
 
@@ -124,23 +131,33 @@ $(function() {
     var dayStreak = ++localStorage.dayStreak;
     $('.dayStreak').text(dayStreak);
 
+    progressLog.push(true);
+    console.log(progressLog);
+
     // update cloud
-    var data = {
+    var dataCheckIn = {
       // isCheckedIn: isCheckedIn,
       lastCheckedInDate: today,
       dayStreak: dayStreak,
-      daysTotal: localStorage.daysTotal
+      daysTotal: localStorage.daysTotal,
+      progressLog: progressLog,
     };
 
+    // var dataProgress = {
+    //   true
+    // }
+
     var updates = {};
-    updates['/checkins/' + userId] = data;
+    updates['/checkins/' + userId] = dataCheckIn;
+    // updates['/checkins/' + userId + '/progressLog'] = progressLog;
     // console.log(updates);
     database.ref().update(updates);
+
+    // database.ref('/checkins/' + userId + '/progressLog/').push(1);
 
     // fill the circle at the bottom
 
 
-    //
     // database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
     //   var isCheckedIn = (snapshot.val() && snapshot.val().isCheckedIn);
     //   console.log("isCheckedIn: " + isCheckedIn);
