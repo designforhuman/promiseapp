@@ -4,6 +4,7 @@ $(function() {
 
   // variables
   var progressLog = [];
+  var shouldGetDaysTotal = false;
 
 
   // initial setup based on localStorage
@@ -18,6 +19,9 @@ $(function() {
     for(i=0; i<localStorage.daysTotal; i++) {
       $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center"></div></div>');
     }
+  } else {
+    // get daysTotal from cloud
+    shouldGetDaysTotal = true;
   }
 
 
@@ -49,6 +53,13 @@ $(function() {
         // console.log(snapshot.val().amount);
         $('.goal').text('목표: ' + daysTotal + '일간 매일 ' + amount + '개씩 ' + goal);
         $('.reward').text(rewardOption + ' ' + rewardInput);
+
+        if(shouldGetDaysTotal) {
+          for(i=0; i<daysTotal; i++) {
+            $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center"></div></div>');
+          }
+          localStorage.daysTotal = daysTotal;
+        }
 
 
         // status check

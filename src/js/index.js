@@ -37,7 +37,7 @@ $(function() {
         localStorage.isFirstTime = true;
 
         // update database
-        updatePromise(uid, localStorage.goal, localStorage.period, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+        updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
 
         // move to checkin page
         window.location.href = 'checkin.html';
@@ -124,16 +124,16 @@ $(function() {
 
 
 
-  // period
-  // selectedPeriod.append( " 일간" );
+  // daysTotal
+  // selecteddaysTotal.append( " 일간" );
 
-  $('#formControlPeriod').change(function() {
-    $('#formControlPeriod option').each(function() {
+  $('#formControldaysTotal').change(function() {
+    $('#formControldaysTotal option').each(function() {
       $(this).text( $(this).val() );
     });
-    var selectedOption = $('#formControlPeriod option:selected');
+    var selectedOption = $('#formControldaysTotal option:selected');
     selectedOption.append( " 일간" );
-    localStorage.period = selectedOption.val();
+    localStorage.daysTotal = selectedOption.val();
   });
 
 
@@ -163,12 +163,12 @@ $(function() {
   }
 
 
-  function updatePromise(userId, goal, period, amount, rewardOption, rewardInput, isFirstTime) {
+  function updatePromise(userId, goal, daysTotal, amount, rewardOption, rewardInput, isFirstTime) {
     // console.log("USERID: " + userId);
     // console.log("RO: " + goal);
     database.ref('promises/' + userId).set({
       goal: goal,
-      period: period,
+      daysTotal: daysTotal,
       amount: amount,
       rewardOption: rewardOption,
       rewardInput: rewardInput,
