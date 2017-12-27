@@ -14,24 +14,47 @@
   width: 50%;
   height: 50%;
   margin: auto;
+  font-size: 48px;
+  font-weight: 200;
+}
+
+
+.checkInProgress {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+
+.progressDotContainer {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+
+.progressDot {
+  margin: 0 auto;
+  background-color: #EDEDED;
+  width: 60px;
+  height: 60px;
+  max-width: 60px;
+  max-height: 60px;
+  border-radius: 50%;
 }
 
 
 
-/*.btn-container-share {
-  margin-left: 4em;
-  margin-right: 4em;
-  margin-bottom: 1em;
-}
 
 
-
+/*
 @media only screen and (max-width: 500px) {
 
-  .btn-container-share {
-    margin-left: 1em;
-    margin-right: 1em;
-    margin-bottom: 1em;
+
+  .progressDot {
+    width: 40px;
+    height: 40px;
   }
 
-}*/
+}
+ */

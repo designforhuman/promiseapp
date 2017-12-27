@@ -15,6 +15,9 @@ $(function() {
   localStorage.rewardInput = "";
   localStorage.isFirstTime = "false";
 
+  selectedDaysTotal.append( " 일간" );
+  selectedAmount.append( " 개씩" );
+
 
 
 
@@ -122,7 +125,7 @@ $(function() {
 
 
   // period
-  selectedPeriod.append( " 일간" );
+  // selectedPeriod.append( " 일간" );
 
   $('#formControlPeriod').change(function() {
     $('#formControlPeriod option').each(function() {
@@ -137,7 +140,7 @@ $(function() {
 
 
   // amount
-  selectedAmount.append( " 개씩" );
+  // selectedAmount.append( " 개씩" );
 
   $('#formControlAmount').change(function() {
     $('#formControlAmount option').each(function() {

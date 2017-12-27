@@ -2,19 +2,26 @@
 
 $(function() {
 
-  var isCheckedIn = false;
-  var isLoggedIn = false;
+  // initial setup based on localStorage
 
+
+  // diable check in button by default
+  disableCheckInBtn();
+
+
+  // render progress dots' background
+  if(localStorage.daysTotal != "undefined") {
+    for(i=0; i<localStorage.daysTotal; i++) {
+      $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center"></div></div>');
+    }
+  }
 
 
   // first time sharing popup message
   firebase.auth().onAuthStateChanged(function(user) {
-    // console.log("HI");
-    // console.log(user);
     if(user) {
-      isLoggedIn = true;
+      // isLoggedIn = true;
       var userId = user.uid;
-      // console.log("HEY");
 
       return database.ref('/promises/' + userId).once('value').then(function(snapshot) {
         var value = snapshot.val();
@@ -45,12 +52,13 @@ $(function() {
         // read day streak
         database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
           var val = snapshot.val();
-          var isCheckedIn = val.isCheckedIn;
+          // var isCheckedIn = val.isCheckedIn;
           var lastCheckedInDate = val.lastCheckedInDate;
+          var dayStreak = val.dayStreak;
+          $('.dayStreak').text(dayStreak);
 
           if(lastCheckedInDate == getToday()) {
             console.log("SAME!");
-            disableCheckInBtn();
           } else {
             console.log("DIFFERENT!");
             enableCheckInBtn();
@@ -77,12 +85,7 @@ $(function() {
   var getToday;
   (getToday = function() {
     var date = new Date();
-    // console.log("Date: " + date);
-    // console.log("MM: " + (date.getMonth() + 1));
-    // console.log("DD: " + date.getDate());
-    // console.log("YYYY: " + date.getFullYear());
     var today = "" + date.getDate() + (date.getMonth() + 1) + date.getFullYear();
-    // console.log(today);
     return today;
   })();
 
@@ -110,58 +113,58 @@ $(function() {
 
     var userId = firebase.auth().currentUser.uid;
 
-    database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
-      var isCheckedIn = (snapshot.val() && snapshot.val().isCheckedIn);
-      console.log("isCheckedIn: " + isCheckedIn);
-      console.log("daysTotal: " + localStorage.daysTotal);
+    // update check in status
+    // isCheckedIn = true;
+    var today = getToday();
+
+    // disable button
+    disableCheckInBtn();
+
+    // change the day streak number
+    var dayStreak = ++localStorage.dayStreak;
+    $('.dayStreak').text(dayStreak);
+
+    // update cloud
+    var data = {
+      // isCheckedIn: isCheckedIn,
+      lastCheckedInDate: today,
+      dayStreak: dayStreak,
+      daysTotal: localStorage.daysTotal
+    };
+
+    var updates = {};
+    updates['/checkins/' + userId] = data;
+    // console.log(updates);
+    database.ref().update(updates);
+
+    // fill the circle at the bottom
 
 
-      if(isCheckedIn == false) {
-        // 체크인 버튼 누를 때 오늘(new Date()) 날짜를 얻고 checkedDate에 string으로 저장하고, isCheckedIn을 true로 변경한다.
-        // 페이지 로딩할 때 checkedDate이 new Date()과 다르면 isCheckedIn을 false로 변경하여 버튼을 다시 active로 변경한다.
-
-        // update check in status
-        isCheckedIn = true;
-        var today = getToday();
-
-        // disable button
-        disableCheckInBtn();
-
-        // change the day streak number
-        var dayStreak = ++localStorage.dayStreak;
-        $('.daystreak').text(dayStreak);
-
-        // update cloud
-        var data = {
-          isCheckedIn: isCheckedIn,
-          lastCheckedInDate: today,
-          dayStreak: dayStreak,
-          daysTotal: localStorage.daysTotal
-        };
-
-        var updates = {};
-        updates['/checkins/' + userId] = data;
-        // console.log(updates);
-        database.ref().update(updates);
-
-        // fill the circle at the bottom
-
-
-
-      }
-      else {
-        // if already checked in today
-        return;
-      }
-
-      // test
-
-
-
-    });
+    //
+    // database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
+    //   var isCheckedIn = (snapshot.val() && snapshot.val().isCheckedIn);
+    //   console.log("isCheckedIn: " + isCheckedIn);
+    //   console.log("daysTotal: " + localStorage.daysTotal);
+    //
+    //
+    //   // if(isCheckedIn == false) {
+    //     // 체크인 버튼 누를 때 오늘(new Date()) 날짜를 얻고 checkedDate에 string으로 저장하고, isCheckedIn을 true로 변경한다.
+    //     // 페이지 로딩할 때 checkedDate이 new Date()과 다르면 isCheckedIn을 false로 변경하여 버튼을 다시 active로 변경한다.
+    //
+    //
+    //
+    //
+    //   // }
+    //
+    //
+    // });
 
 
   });
+
+
+
+
 
 
 });
