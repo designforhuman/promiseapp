@@ -5,24 +5,28 @@ $(function() {
   // variables
   var progressLog = [];
   var shouldGetDaysTotal = false;
+  var dayStreak = "";
 
 
-  // initial setup based on localStorage
 
 
   // diable check in button by default
   disableCheckInBtn();
 
 
-  // render progress dots' background
-  if(localStorage.daysTotal != "undefined") {
-    for(i=0; i<localStorage.daysTotal; i++) {
+
+  // fill progress dots
+  function fillProgressDots(total) {
+    for(i=0; i<total; i++) {
       $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center"></div></div>');
     }
-  } else {
-    // get daysTotal from cloud
-    shouldGetDaysTotal = true;
   }
+
+  function updateProgressDots(checkedInTotal) {
+    $('.checkInProgress .progressDot:lt(' + checkedInTotal + ')').addClass("bg-primary");
+  }
+
+
 
 
   // first time sharing popup message
@@ -54,14 +58,6 @@ $(function() {
         $('.goal').text('목표: ' + daysTotal + '일간 매일 ' + amount + '개씩 ' + goal);
         $('.reward').text(rewardOption + ' ' + rewardInput);
 
-        if(shouldGetDaysTotal) {
-          for(i=0; i<daysTotal; i++) {
-            $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center"></div></div>');
-          }
-          localStorage.daysTotal = daysTotal;
-        }
-
-
         // status check
         // diable checkin button if already done for today
         // read day streak
@@ -69,9 +65,19 @@ $(function() {
           var val = snapshot.val();
           // var isCheckedIn = val.isCheckedIn;
           var lastCheckedInDate = val.lastCheckedInDate;
-          var dayStreak = val.dayStreak;
-          $('.dayStreak').text(dayStreak);
-          progressLog = val.progressLog;
+          dayStreak = val.dayStreak;
+          // console.log("DAYSTREAK: " + dayStreak);
+          $('.btn-checkin').text(dayStreak);
+
+          // check if there is already a previous progress
+          // if so, copy the existing one from cloud
+          if(val.progressLog != undefined) {
+            progressLog = val.progressLog;
+          }
+
+          // fill progress dots
+          fillProgressDots(daysTotal);
+          updateProgressDots(dayStreak);
 
           if(lastCheckedInDate == getToday()) {
             console.log("SAME!");
@@ -139,11 +145,13 @@ $(function() {
     disableCheckInBtn();
 
     // change the day streak number
-    var dayStreak = ++localStorage.dayStreak;
-    $('.dayStreak').text(dayStreak);
+    $('.btn-checkin').text(++dayStreak);
 
+    // add today's checkin
     progressLog.push(true);
-    console.log(progressLog);
+
+    // redraw progress dots
+    updateProgressDots(dayStreak);
 
     // update cloud
     var dataCheckIn = {
@@ -154,38 +162,11 @@ $(function() {
       progressLog: progressLog,
     };
 
-    // var dataProgress = {
-    //   true
-    // }
 
     var updates = {};
     updates['/checkins/' + userId] = dataCheckIn;
-    // updates['/checkins/' + userId + '/progressLog'] = progressLog;
-    // console.log(updates);
     database.ref().update(updates);
 
-    // database.ref('/checkins/' + userId + '/progressLog/').push(1);
-
-    // fill the circle at the bottom
-
-
-    // database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
-    //   var isCheckedIn = (snapshot.val() && snapshot.val().isCheckedIn);
-    //   console.log("isCheckedIn: " + isCheckedIn);
-    //   console.log("daysTotal: " + localStorage.daysTotal);
-    //
-    //
-    //   // if(isCheckedIn == false) {
-    //     // 체크인 버튼 누를 때 오늘(new Date()) 날짜를 얻고 checkedDate에 string으로 저장하고, isCheckedIn을 true로 변경한다.
-    //     // 페이지 로딩할 때 checkedDate이 new Date()과 다르면 isCheckedIn을 false로 변경하여 버튼을 다시 active로 변경한다.
-    //
-    //
-    //
-    //
-    //   // }
-    //
-    //
-    // });
 
 
   });

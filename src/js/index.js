@@ -125,8 +125,6 @@ $(function() {
 
 
   // daysTotal
-  // selecteddaysTotal.append( " 일간" );
-
   $('#formControldaysTotal').change(function() {
     $('#formControldaysTotal option').each(function() {
       $(this).text( $(this).val() );
@@ -140,8 +138,6 @@ $(function() {
 
 
   // amount
-  // selectedAmount.append( " 개씩" );
-
   $('#formControlAmount').change(function() {
     $('#formControlAmount option').each(function() {
       $(this).text( $(this).val() );
