@@ -1,14 +1,41 @@
 
 
 
+// load categories from JSON file
+var goals = {};
+var goalNames = [];
+var goalControlNames = [];
+var goalAmounts = [];
+var goalUnits = [];
+var goalIsEveryday = [];
+var goalIndices = [];
+
+$.getJSON("./data/goals.json", function(data) {
+  goals = data;
+  $.each(goals, function(key) {
+    goalControlNames.push(key);
+  });
+  $.map(goals, function(goal) {
+    goalNames.push(goal.name);
+    goalAmounts.push(goal.amount);
+    goalUnits.push(goal.unit);
+    goalIsEveryday.push(goal.everyday);
+  });
+});
+
+
+
+
 $(function() {
+  // console.log(goals);
 
 
   // variables
+  var selectedUnit = "";
   var selectedDaysTotal = $('#formControlDaysTotal option:selected');
   var selectedAmount = $('#formControlAmount option:selected');
 
-  localStorage.goal = "Test";
+  localStorage.goal = "";
   localStorage.daysTotal = selectedDaysTotal.val();
   localStorage.amount = selectedAmount.val();
   localStorage.rewardOption = "성공하면";
@@ -30,10 +57,6 @@ $(function() {
 
     }, function(response){
       if (response && !response.error_message) {
-        // console.log('Posting completed.');
-        // console.log("response: " + response);
-        // console.log("response_id: " + response.post_id);
-        // console.log("response_status: " + response.status);
         localStorage.isFirstTime = true;
 
         // update database
@@ -49,7 +72,6 @@ $(function() {
 
     });
   }
-
 
 
 
@@ -107,45 +129,79 @@ $(function() {
 
 
 
-
+  // render goals
+  for(i=0; i<goalNames.length; i++) {
+    $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + goalControlNames[i] + '" data-index="' + i + '">' + goalNames[i] + '</a>' );
+  }
 
   // habit category: modal
+  // upon goal selected
   $('#modalHabit .list-group-item[data-toggle="list"]').on('shown.bs.tab', function (e) {
     localStorage.goal = e.target.text;
-  });
-
-  $('#modalHabit .btn-primary').click(function() {
+    // console.log( $(this).attr('aria-controls') );
+    // console.log($(this).data('index'));
     $('.btn-habit-category').text(localStorage.goal + "를");
     $('.btn-habit-category').addClass('btn-outline-dark');
+    $('#modalHabit').modal('hide');
+
+    var selectedGoalName = $(this).attr('aria-controls');
+
+    // re-render amounts
+    $('#formControlAmount').empty();
+    var selectedAmounts = goals[selectedGoalName].amount;
+    selectedUnit = goals[selectedGoalName].unit;
+
+    for(i=0; i<selectedAmounts.length; i++) {
+      $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
+      if(i == 0) {
+        $('#formControlAmount option:selected').append( " " + selectedUnit );
+      }
+    }
+
+    // change ending phrase depends on the goal
+    if( selectedGoalName == "diet" ) {
+      $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
+    } else {
+      $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
+    }
+  });
+
+
+  $('#modalHabit .btn-primary').click(function() {
     $('#modalHabit').modal('hide');
   });
 
 
 
+  // amount
+  $('#formControlAmount').change(function() {
+    // show the unit only for the selected one
+    $('#formControlAmount option').each(function() {
+      $(this).text( $(this).val() );
+    });
+    var selectedOption = $('#formControlAmount option:selected')
+    selectedOption.append( " " + selectedUnit );
+
+    // save to local storage for checkin screen
+    localStorage.amount = selectedOption.val();
+  });
+
 
 
   // daysTotal
-  $('#formControldaysTotal').change(function() {
-    $('#formControldaysTotal option').each(function() {
+  $('#formControlDaysTotal').change(function() {
+    $('#formControlDaysTotal option').each(function() {
       $(this).text( $(this).val() );
     });
-    var selectedOption = $('#formControldaysTotal option:selected');
+    var selectedOption = $('#formControlDaysTotal option:selected');
     selectedOption.append( " 일간" );
+
+    // save to local storage for checkin screen
     localStorage.daysTotal = selectedOption.val();
   });
 
 
 
-
-  // amount
-  $('#formControlAmount').change(function() {
-    $('#formControlAmount option').each(function() {
-      $(this).text( $(this).val() );
-    });
-    var selectedOption = $('#formControlAmount option:selected')
-    selectedOption.append( " 개씩" );
-    localStorage.amount = selectedOption.val();
-  });
 
 
 
