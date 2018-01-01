@@ -161,8 +161,10 @@ $(function() {
     // change ending phrase depends on the goal
     if( selectedGoalName == "diet" ) {
       $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
+      $('.promise-text-sub').text("");
     } else {
       $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
+      $('.promise-text-sub').text("3일 결석까지 인정");
     }
   });
 
