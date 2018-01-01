@@ -3,9 +3,11 @@
 $(function() {
 
   // variables
+  var _MS_PER_DAY = 1000 * 60 * 60 * 24; //86400000
   var progressLog = [];
   var shouldGetDaysTotal = false;
   var dayStreak = "";
+  var lastCheckedInDate = 0;
 
 
 
@@ -18,12 +20,20 @@ $(function() {
   // fill progress dots
   function fillProgressDots(total) {
     for(i=0; i<total; i++) {
-      $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center"></div></div>');
+      $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center day' + i + '"></div></div>');
     }
   }
 
-  function updateProgressDots(checkedInTotal) {
-    $('.checkInProgress .progressDot:lt(' + checkedInTotal + ')').addClass("bg-primary");
+  function updateProgressDots(progressLog) {
+    // $('.checkInProgress .progressDot:lt(' + checkedInTotal + ')').addClass("bg-primary");
+
+    for(i=0; i<progressLog.length; i++) {
+      if(progressLog[i]) {
+        $('.checkInProgress .day' + i + '').addClass("bg-primary");
+      } else {
+        $('.checkInProgress .day' + i + '').addClass("bg-danger");
+      }
+    }
   }
 
 
@@ -64,7 +74,7 @@ $(function() {
         database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
           var val = snapshot.val();
           // var isCheckedIn = val.isCheckedIn;
-          var lastCheckedInDate = val.lastCheckedInDate;
+          lastCheckedInDate = val.lastCheckedInDate;
           dayStreak = val.dayStreak;
           // console.log("DAYSTREAK: " + dayStreak);
           $('.btn-checkin').text(dayStreak);
@@ -77,14 +87,22 @@ $(function() {
 
           // fill progress dots
           fillProgressDots(daysTotal);
-          updateProgressDots(dayStreak);
+          updateProgressDots(progressLog);
 
-          if(lastCheckedInDate == getToday()) {
-            console.log("SAME!");
+          if( calcDateDifference(lastCheckedInDate) == 0) {
+            // if already checked in today
+            // console.log("SAME!");
           } else {
-            console.log("DIFFERENT!");
+            // console.log("DIFFERENT!");
             enableCheckInBtn();
           }
+
+          // if(lastCheckedInDate == getToday()) {
+          //   console.log("SAME!");
+          // } else {
+          //   console.log("DIFFERENT!");
+          //   enableCheckInBtn();
+          // }
 
         });
 
@@ -104,12 +122,24 @@ $(function() {
 
 
   // get today
-  var getToday;
-  (getToday = function() {
+  // var getToday;
+  function getToday() {
     var date = new Date();
-    var today = "" + date.getDate() + (date.getMonth() + 1) + date.getFullYear();
+    // console.log(date);
+    // var today = "" + date.getDate() + (date.getMonth() + 1) + date.getFullYear();
+    var today = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    // var today = "" + date.getFullYear() + (date.getMonth() + 1) + date.getDate();
+    // console.log( Math.floor(today/_MS_PER_DAY) );
+    // console.log(today);
     return today;
-  })();
+  }
+  // getToday();
+
+
+  function calcDateDifference(lastCheckedInDate) {
+    // console.log( (getToday() - lastCheckedInDate) / _MS_PER_DAY );
+    return (getToday() - lastCheckedInDate) / _MS_PER_DAY;
+  }
 
 
 
@@ -148,10 +178,16 @@ $(function() {
     $('.btn-checkin').text(++dayStreak);
 
     // add today's checkin
+    var dayDifference = calcDateDifference(lastCheckedInDate);
+    for(i=0; i<dayDifference; i++) {
+      progressLog.push(false);
+    }
     progressLog.push(true);
 
+
     // redraw progress dots
-    updateProgressDots(dayStreak);
+    // updateProgressDots(dayStreak);
+    updateProgressDots(progressLog);
 
     // update cloud
     var dataCheckIn = {
@@ -166,6 +202,7 @@ $(function() {
     var updates = {};
     updates['/checkins/' + userId] = dataCheckIn;
     database.ref().update(updates);
+    // console.log(progressLog);
 
 
 

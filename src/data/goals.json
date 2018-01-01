@@ -1,56 +1,65 @@
 {
 	"diet" : {
+		"controlName" : "diet",
 		"name" : "살빼기",
 		"amount" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 		"unit" : "kg 감량",
 		"everyday" : false
 	},
 	"pushup" : {
+		"controlName" : "pushup",
 		"name" : "팔굽혀펴기",
 		"amount" : [10, 30, 50, 100, 150, 200],
 		"unit" : "개씩",
 		"everyday" : true
 	},
-	"run" : {
+	"running" : {
+		"controlName" : "running",
 		"name" : "달리기",
 		"amount" : [10, 20, 30, 40, 50, 60],
 		"unit" : "분씩",
 		"everyday" : true
 	},
 	"workout" : {
+		"controlName" : "workout",
 		"name" : "헬스",
 		"amount" : [30, 60, 90, 120],
 		"unit" : "분씩",
 		"everyday" : true
 	},
 	"pilates" : {
+		"controlName" : "pilates",
 		"name" : "필라테스",
 		"amount" : [30, 60, 90, 120],
 		"unit" : "분씩",
 		"everyday" : true
 	},
 	"englishstudy" : {
+		"controlName" : "englishstudy",
 		"name" : "영어 공부",
 		"amount" : [10, 20, 30, 40, 50, 60],
 		"unit" : "분씩",
 		"everyday" : true
 	},
 	"mathstudy" : {
+		"controlName" : "mathstudy",
 		"name" : "수학 공부",
 		"amount" : [10, 20, 30, 40, 50, 60],
 		"unit" : "분씩",
 		"everyday" : true
 	},
 	"coding" : {
+		"controlName" : "coding",
 		"name" : "프로그래밍 공부",
 		"amount" : [10, 20, 30, 40, 50, 60],
 		"unit" : "분씩",
 		"everyday" : true
 	},
 	"reading" : {
+		"controlName" : "reading",
 		"name" : "독서",
 		"amount" : [10, 20, 30, 40, 50, 60],
-		"unit" : "분씩", 
+		"unit" : "분씩",
 		"everyday" : true
 	}
 }

@@ -12,10 +12,11 @@ var goalIndices = [];
 
 $.getJSON("./data/goals.json", function(data) {
   goals = data;
-  $.each(goals, function(key) {
-    goalControlNames.push(key);
-  });
+  // $.each(goals, function(key) {
+  //   goalControlNames.push(key);
+  // });
   $.map(goals, function(goal) {
+    goalControlNames.push(goal.controlName);
     goalNames.push(goal.name);
     goalAmounts.push(goal.amount);
     goalUnits.push(goal.unit);
@@ -73,7 +74,14 @@ $(function() {
     });
   }
 
-
+  // var form = document.getElementById('formPromise');
+  // form.addEventListener('submit', function(event) {
+  //   if (form.checkValidity() === false) {
+  //     event.preventDefault();
+  //     event.stopPropagation();
+  //   }
+  //   form.classList.add('was-validated');
+  // }, false);
 
 
   // if already logged-in
@@ -83,10 +91,18 @@ $(function() {
       $('.btn-register').text("페이스북 공유");
 
       $('.btn-register').click(function() {
-        localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
-        localStorage.rewardInput = $('#rewardInput').val();
-        // console.log("RO2: " + localStorage.rewardOption);
-        share(user.uid);
+        var form = $('#formPromise')[0];
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          form.classList.add('was-validated');
+        } else {
+          localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
+          localStorage.rewardInput = $('#rewardInput').val();
+          share(user.uid);
+        }
+
       });
 
     } else {
