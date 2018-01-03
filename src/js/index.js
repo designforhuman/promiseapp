@@ -1,10 +1,9 @@
 
 
-
 // load categories from JSON file
 var goals = {};
-var goalNames = [];
 var goalControlNames = [];
+var goalNames = [];
 var goalAmounts = [];
 var goalUnits = [];
 var goalIsEveryday = [];
@@ -12,23 +11,19 @@ var goalIndices = [];
 
 $.getJSON("./data/goals.json", function(data) {
   goals = data;
-  // $.each(goals, function(key) {
-  //   goalControlNames.push(key);
-  // });
-  $.map(goals, function(goal) {
-    goalControlNames.push(goal.controlName);
-    goalNames.push(goal.name);
-    goalAmounts.push(goal.amount);
-    goalUnits.push(goal.unit);
-    goalIsEveryday.push(goal.everyday);
+  $.each(data, function(key, value) {
+    goalControlNames.push(key);
+    goalNames.push(value.name);
+    goalAmounts.push(value.amount);
+    goalUnits.push(value.unit);
+    goalIsEveryday.push(value.everyday);
   });
+
 });
 
 
 
-
 $(function() {
-  // console.log(goals);
 
 
   // variables
@@ -64,10 +59,11 @@ $(function() {
         updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
 
         // move to checkin page
+        console.log('Move to checkin page.');
         window.location.href = 'checkin.html';
 
       } else {
-        // console.log('Error while posting.');
+        console.log('Error while posting.');
 
       }
 
@@ -91,17 +87,9 @@ $(function() {
       $('.btn-register').text("페이스북 공유");
 
       $('.btn-register').click(function() {
-        var form = $('#formPromise')[0];
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          form.classList.add('was-validated');
-        } else {
-          localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
-          localStorage.rewardInput = $('#rewardInput').val();
-          share(user.uid);
-        }
+        localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
+        localStorage.rewardInput = $('#rewardInput').val();
+        share(user.uid);
 
       });
 
@@ -113,8 +101,6 @@ $(function() {
 
         localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
         localStorage.rewardInput = $('#rewardInput').val();
-        // console.log("RO1: " + localStorage.rewardOption);
-
 
         firebase.auth().signInWithPopup(provider).then(function(result) {
           // The signed-in user info.
@@ -146,7 +132,8 @@ $(function() {
 
 
   // render goals
-  for(i=0; i<goalNames.length; i++) {
+
+  for(i=0; i<goalControlNames.length; i++) {
     $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + goalControlNames[i] + '" data-index="' + i + '">' + goalNames[i] + '</a>' );
   }
 

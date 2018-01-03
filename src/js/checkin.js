@@ -6,7 +6,7 @@ $(function() {
   var _MS_PER_DAY = 1000 * 60 * 60 * 24; //86400000
   var progressLog = [];
   var shouldGetDaysTotal = false;
-  var dayStreak = "";
+  var dayStreak = 0;
   var lastCheckedInDate = 0;
 
 
@@ -58,10 +58,6 @@ $(function() {
         // console.log("FIRST: " + isFirstTime);
         if(isFirstTime) {
           $('#modalShareSuccessful').modal('show');
-          var updates = {};
-          updates['/promises/' + userId + '/isFirstTime'] = false;
-          // console.log(updates);
-          database.ref().update(updates);
         }
 
         // console.log(snapshot.val().amount);
@@ -73,17 +69,24 @@ $(function() {
         // read day streak
         database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
           var val = snapshot.val();
-          // var isCheckedIn = val.isCheckedIn;
-          lastCheckedInDate = val.lastCheckedInDate;
-          dayStreak = val.dayStreak;
+          if(!isFirstTime) {
+            lastCheckedInDate = val.lastCheckedInDate;
+            dayStreak = val.dayStreak;
+
+            // check if there is already a previous progress
+            // if so, copy the existing one from cloud
+            if(val.progressLog != undefined) {
+              progressLog = val.progressLog;
+            }
+          } else {
+            var updates = {};
+            updates['/promises/' + userId + '/isFirstTime'] = false;
+            // console.log(updates);
+            database.ref().update(updates);
+          }
+
           // console.log("DAYSTREAK: " + dayStreak);
           $('.btn-checkin').text(dayStreak);
-
-          // check if there is already a previous progress
-          // if so, copy the existing one from cloud
-          if(val.progressLog != undefined) {
-            progressLog = val.progressLog;
-          }
 
           // fill progress dots
           fillProgressDots(daysTotal);
@@ -96,14 +99,6 @@ $(function() {
             // console.log("DIFFERENT!");
             enableCheckInBtn();
           }
-
-          // if(lastCheckedInDate == getToday()) {
-          //   console.log("SAME!");
-          // } else {
-          //   console.log("DIFFERENT!");
-          //   enableCheckInBtn();
-          // }
-
         });
 
 
@@ -178,7 +173,11 @@ $(function() {
     $('.btn-checkin').text(++dayStreak);
 
     // add today's checkin
-    var dayDifference = calcDateDifference(lastCheckedInDate);
+    var dayDifference = 0;
+    if(lastCheckedInDate != 0) {
+      dayDifference = calcDateDifference(lastCheckedInDate);
+    }
+
     for(i=0; i<dayDifference; i++) {
       progressLog.push(false);
     }
