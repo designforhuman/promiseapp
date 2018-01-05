@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-    <meta property="og:url"           content="https://promiseappcom.firebaseapp.com/index.html" />
+    <meta property="og:url"           content="https://promiseappcom.firebaseapp.com/" />
     <meta property="og:type"          content="website" />
     <meta property="og:title"         content="Promise" />
     <meta property="og:description"   content="Hold yourself accountable for your daily goals and habits by making a promise with others." />
@@ -41,6 +41,30 @@
 
 
 
+    <!-- Modal -->
+    <div class="modal-registered modal" id="modalRegistered" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Welcome</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>회원 가입을 축하합니다!</p>
+            <p>Promise는 당신의 목표를 이루어 드리기 위해 만들어졌습니다. 목표를 성취하는 가장 강력한 방법 중에 하나는 친구들에게 공유하는 것입니다. 혼자 할 때보다 성공할 확률이 5배 이상 높습니다.</p>
+            <small class="form-text text-muted">*공유 필수</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-share">약속 공유</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
     <nav class="sticky-top navbar navbar-light bg-light">
       <span class="navbar-brand mb-0 h1">
         Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small>
@@ -65,7 +89,7 @@
           </button>
 
           <!-- Modal -->
-          <div class="modal-habit modal" id="modalHabit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <div class="modal-habit modal" id="modalHabit" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -125,15 +149,18 @@
 
         <div class="p-3"> </div>
 
-        <div class="mb-3">
-          <button type="submit" class="btn-register btn btn-primary btn-block btn-lg">페이스북 가입 & 공유</button>
+        <div class="mb-3 btn-register-container">
+          <button type="submit" class="btn-register btn btn-primary btn-block btn-lg">페이스북으로 가입</button>
+        </div>
+
+        <div class="mb-3 btn-share-container d-none">
+          <button type="button" class="btn-share btn btn-primary btn-block btn-lg">약속 공유</button>
         </div>
 
 
 
       </form>
 
-      <div id="shareBtn" class="btn btn-success clearfix">Share</div>
 
 
 

@@ -3,6 +3,7 @@
 
 // facebook auth
 var provider = new firebase.auth.FacebookAuthProvider();
+// provider.addScope('publish_actions, user_posts');
 
 
 // detect if it is mobile
@@ -35,7 +36,17 @@ $.getJSON("/data/goals.json", function(data) {
 
 
 
+
+
 $(function() {
+
+  // if canceled sharing
+  if(localStorage.didShare != "true") {
+    // fill in previously selected goal and amounts
+    //////////
+    $('#rewardInput').val(localStorage.rewardInput);
+  }
+
 
 
   // variables
@@ -43,12 +54,10 @@ $(function() {
   var selectedDaysTotal = $('#formControlDaysTotal option:selected');
   var selectedAmount = $('#formControlAmount option:selected');
 
-  localStorage.goal = "";
   localStorage.daysTotal = selectedDaysTotal.val();
   localStorage.amount = selectedAmount.val();
-  localStorage.rewardOption = "성공하면";
-  localStorage.rewardInput = "";
   localStorage.isFirstTime = "false";
+
 
   selectedDaysTotal.append( " 일간" );
   selectedAmount.append( " 개씩" );
@@ -60,13 +69,23 @@ $(function() {
   // share function
   function share(uid) {
     if(isMobile) {
+      // console.log("THIS IS MOBILE");
+
+      // update database
+      updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+
+      // var shareUrl = "https://www.facebook.com/dialog/share?app_id=137706030341228&display=touch&href=https://promiseappcom.firebaseapp.com/&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
+      var shareUrl = "https://www.facebook.com/dialog/feed?app_id=137706030341228&ref=promiseshare&link=https://promiseappcom.firebaseapp.com&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
+      window.location.href = shareUrl;
+      // window.open(shareUrl);
+
 
     } else {
+      // console.log("THIS IS DESKTOP");
 
       FB.ui({
         method: 'share',
-        mobile_iframe: true,
-        href: 'https://promiseappcom.firebaseapp.com/',
+        href: 'https://promiseappcom.firebaseapp.com/'
 
       }, function(response){
         if (response && !response.error_message) {
@@ -78,7 +97,7 @@ $(function() {
           // move to checkin page
           // console.log('Move to checkin page.');
           // window.open('checkin.html');
-          window.location.href = 'checkin.html';
+          window.location.href = 'https://promiseappcom.firebaseapp.com/checkin.html';
         } else {
           // console.log('Error while posting.');
         }
@@ -87,33 +106,6 @@ $(function() {
     }
   }
 
-
-  $('#shareBtn').click(function() {
-
-    var body = 'Reading JS SDK documentation';
-    FB.api('/me/feed', 'post', { message: body }, function(response) {
-      if (!response || response.error) {
-        alert('Error occured');
-      } else {
-        alert('Post ID: ' + response.id);
-      }
-    });
-
-    // e.preventDefault();
-    // FB.ui({
-    //   method: 'share',
-    //   mobile_iframe: true,
-    //   href: 'https://developers.facebook.com/docs/',
-    // }, function(response){});
-
-    // FB.ui({
-    //   method: 'share_open_graph',
-    //   action_type: 'og.likes',
-    //   action_properties: JSON.stringify({
-    //     object:'https://developers.facebook.com/docs/',
-    //   })
-    // }, function(response){});
-  });
 
 
 
@@ -129,13 +121,9 @@ $(function() {
         var user = result.user;
         writeUserData(user.uid, user.displayName, user.email);
 
-        // share
-        console.log("SHARE AFTER REDIRECTED");
-        share(user.uid);
-
+        $('#modalRegistered').modal('show');
       }
-      // The signed-in user info.
-      var user = result.user;
+
     }).catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -150,49 +138,76 @@ $(function() {
 
 
 
-  // if already logged-in
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      // change text for the register button
-      $('.btn-register').text("페이스북 공유");
-    }
+  // save reward to localstorage
+  function saveReward() {
+    localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
+    localStorage.rewardInput = $('#rewardInput').val();
+  }
 
-    // register and share
-    $('.btn-register').click(function() {
 
-      localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
-      localStorage.rewardInput = $('#rewardInput').val();
 
-      if(isMobile) {
-        // console.log("MOBILE");
-        firebase.auth().signInWithRedirect(provider);
-      } else {
-        // console.log("DESKTOP");
-        firebase.auth().signInWithPopup(provider).then(function(result) {
-          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          // ...
-        }).catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
-      }
+  $('.btn-share').click(function () {
+    // console.log("SHARE!");
+    saveReward();
 
-    });
+    var user = firebase.auth().currentUser;
+    // console.log(user);
+    // console.log(user.uid);
+    share(user.uid);
   });
 
 
 
-  // render goals
+  // if already logged-in
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // change text for the register button
+      $('.btn-share-container').removeClass('d-none');
+      $('.btn-register-container').addClass('d-none');
+    }
 
+  });
+
+
+
+  // register and share
+  $('.btn-register').click(function(e) {
+    e.preventDefault();
+
+    saveReward();
+
+    if(isMobile) {
+      console.log("MOBILE");
+      firebase.auth().signInWithRedirect(provider);
+
+
+    } else {
+      console.log("DESKTOP");
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        // ...
+
+      }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+      });
+    }
+
+  });
+
+
+
+
+  // render goals
   for(i=0; i<goalControlNames.length; i++) {
     $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + goalControlNames[i] + '" data-index="' + i + '">' + goalNames[i] + '</a>' );
   }
@@ -207,12 +222,12 @@ $(function() {
     $('.btn-habit-category').addClass('btn-outline-dark');
     $('#modalHabit').modal('hide');
 
-    var selectedGoalName = $(this).attr('aria-controls');
+    localStorage.selectedGoalName = $(this).attr('aria-controls');
 
     // re-render amounts
     $('#formControlAmount').empty();
-    var selectedAmounts = goals[selectedGoalName].amount;
-    selectedUnit = goals[selectedGoalName].unit;
+    var selectedAmounts = goals[localStorage.selectedGoalName].amount;
+    selectedUnit = goals[localStorage.selectedGoalName].unit;
 
     for(i=0; i<selectedAmounts.length; i++) {
       $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
@@ -222,7 +237,6 @@ $(function() {
         localStorage.amount = selectedAmounts[i];
       }
     }
-
 
     // change ending phrase depends on the goal
     if( goals[selectedGoalName].everyday == false ) {
