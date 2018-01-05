@@ -61,5 +61,12 @@
 		"amount" : [10, 20, 30, 40, 50, 60],
 		"unit" : "분씩",
 		"everyday" : true
+	},
+	"quitsmoking" : {
+		"controlName" : "quitsmoking",
+		"name" : "담배 안피기",
+		"amount" : [],
+		"unit" : "",
+		"everyday" : false
 	}
 }

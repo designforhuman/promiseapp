@@ -1,5 +1,18 @@
 
 
+
+// facebook auth
+var provider = new firebase.auth.FacebookAuthProvider();
+
+
+// detect if it is mobile
+var isMobile = false;
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Opera Mobile|Kindle|Windows Phone|PSP|AvantGo|Atomic Web Browser|Blazer|Chrome Mobile|Dolphin|Dolfin|Doris|GO Browser|Jasmine|MicroB|Mobile Firefox|Mobile Safari|Mobile Silk|Motorola Internet Browser|NetFront|NineSky|Nokia Web Browser|Obigo|Openwave Mobile Browser|Palm Pre web browser|Polaris|PS Vita browser|Puffin|QQbrowser|SEMC Browser|Skyfire|Tear|TeaShark|UC Browser|uZard Web|wOSBrowser|Yandex.Browser mobile/i.test(navigator.userAgent)) {
+  isMobile = true;
+}
+
+
+
 // load categories from JSON file
 var goals = {};
 var goalControlNames = [];
@@ -9,7 +22,7 @@ var goalUnits = [];
 var goalIsEveryday = [];
 var goalIndices = [];
 
-$.getJSON("./data/goals.json", function(data) {
+$.getJSON("/data/goals.json", function(data) {
   goals = data;
   $.each(data, function(key, value) {
     goalControlNames.push(key);
@@ -18,7 +31,6 @@ $.getJSON("./data/goals.json", function(data) {
     goalUnits.push(value.unit);
     goalIsEveryday.push(value.everyday);
   });
-
 });
 
 
@@ -47,37 +59,95 @@ $(function() {
 
   // share function
   function share(uid) {
-    FB.ui({
-      method: 'feed',
-      link: 'https://promiseappcom.firebaseapp.com/',
+    if(isMobile) {
 
-    }, function(response){
-      if (response && !response.error_message) {
-        localStorage.isFirstTime = true;
+    } else {
 
-        // update database
-        updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+      FB.ui({
+        method: 'share',
+        mobile_iframe: true,
+        href: 'https://promiseappcom.firebaseapp.com/',
 
-        // move to checkin page
-        console.log('Move to checkin page.');
-        window.location.href = 'checkin.html';
+      }, function(response){
+        if (response && !response.error_message) {
+          localStorage.isFirstTime = true;
 
+          // update database
+          updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+
+          // move to checkin page
+          // console.log('Move to checkin page.');
+          // window.open('checkin.html');
+          window.location.href = 'checkin.html';
+        } else {
+          // console.log('Error while posting.');
+        }
+      });
+
+    }
+  }
+
+
+  $('#shareBtn').click(function() {
+
+    var body = 'Reading JS SDK documentation';
+    FB.api('/me/feed', 'post', { message: body }, function(response) {
+      if (!response || response.error) {
+        alert('Error occured');
       } else {
-        console.log('Error while posting.');
+        alert('Post ID: ' + response.id);
+      }
+    });
+
+    // e.preventDefault();
+    // FB.ui({
+    //   method: 'share',
+    //   mobile_iframe: true,
+    //   href: 'https://developers.facebook.com/docs/',
+    // }, function(response){});
+
+    // FB.ui({
+    //   method: 'share_open_graph',
+    //   action_type: 'og.likes',
+    //   action_properties: JSON.stringify({
+    //     object:'https://developers.facebook.com/docs/',
+    //   })
+    // }, function(response){});
+  });
+
+
+
+
+
+  if(isMobile) {
+    firebase.auth().getRedirectResult().then(function(result) {
+      if (result.credential) {
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var token = result.credential.accessToken;
+
+        // write user data async
+        var user = result.user;
+        writeUserData(user.uid, user.displayName, user.email);
+
+        // share
+        console.log("SHARE AFTER REDIRECTED");
+        share(user.uid);
 
       }
-
+      // The signed-in user info.
+      var user = result.user;
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
     });
   }
 
-  // var form = document.getElementById('formPromise');
-  // form.addEventListener('submit', function(event) {
-  //   if (form.checkValidity() === false) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //   }
-  //   form.classList.add('was-validated');
-  // }, false);
 
 
   // if already logged-in
@@ -85,34 +155,25 @@ $(function() {
     if (user) {
       // change text for the register button
       $('.btn-register').text("페이스북 공유");
+    }
 
-      $('.btn-register').click(function() {
-        localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
-        localStorage.rewardInput = $('#rewardInput').val();
-        share(user.uid);
+    // register and share
+    $('.btn-register').click(function() {
 
-      });
+      localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
+      localStorage.rewardInput = $('#rewardInput').val();
 
-    } else {
-      // No user is signed in.
-
-      // register and share
-      $('.btn-register').click(function() {
-
-        localStorage.rewardOption = $('.btn-reward-option label.active').text().replace(/\s/g, "");
-        localStorage.rewardInput = $('#rewardInput').val();
-
+      if(isMobile) {
+        // console.log("MOBILE");
+        firebase.auth().signInWithRedirect(provider);
+      } else {
+        // console.log("DESKTOP");
         firebase.auth().signInWithPopup(provider).then(function(result) {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          var token = result.credential.accessToken;
           // The signed-in user info.
-
-          // write user data async
           var user = result.user;
-          writeUserData(user.uid, user.displayName, user.email);
-
-          share(user.uid);
-
-
-
+          // ...
         }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
@@ -123,10 +184,9 @@ $(function() {
           var credential = error.credential;
           // ...
         });
+      }
 
-      });
-
-    }
+    });
   });
 
 
@@ -158,11 +218,14 @@ $(function() {
       $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
       if(i == 0) {
         $('#formControlAmount option:selected').append( " " + selectedUnit );
+        // save the initial value
+        localStorage.amount = selectedAmounts[i];
       }
     }
 
+
     // change ending phrase depends on the goal
-    if( selectedGoalName == "diet" ) {
+    if( goals[selectedGoalName].everyday == false ) {
       $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
       $('.promise-text-sub').text("");
     } else {
@@ -204,8 +267,6 @@ $(function() {
     // save to local storage for checkin screen
     localStorage.daysTotal = selectedOption.val();
   });
-
-
 
 
 

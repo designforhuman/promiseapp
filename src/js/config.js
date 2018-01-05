@@ -8,8 +8,5 @@ var config = {
 };
 firebase.initializeApp(config);
 
-// facebook auth
-var provider = new firebase.auth.FacebookAuthProvider();
-
 // Get a reference to the database service
 var database = firebase.database();
