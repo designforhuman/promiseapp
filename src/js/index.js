@@ -23,32 +23,6 @@ var goalUnits = [];
 var goalIsEveryday = [];
 var goalIndices = [];
 
-// $.getJSON("/data/goals.json", function(data) {
-//   goals = data;
-//   $.each(data, function(key, value) {
-//     goalControlNames.push(key);
-//     goalNames.push(value.name);
-//     goalAmounts.push(value.amount);
-//     goalUnits.push(value.unit);
-//     goalIsEveryday.push(value.everyday);
-//   });
-// });
-
-$.ajax({
-  cache: false,
-  success: function(data) {
-    goals = data;
-    $.each(data, function(key, value) {
-      goalControlNames.push(key);
-      goalNames.push(value.name);
-      goalAmounts.push(value.amount);
-      goalUnits.push(value.unit);
-      goalIsEveryday.push(value.everyday);
-    });
-  },
-  url: "/data/goals.json"
-});
-
 
 
 
@@ -64,6 +38,75 @@ $(document).keypress(
 
 
 $(function() {
+
+  $.ajax({
+    cache: false,
+    success: function(data) {
+      // console.log(data);
+      goals = data;
+      $.each(data, function(key, value) {
+        goalControlNames.push(key);
+        goalNames.push(value.name);
+        goalAmounts.push(value.amount);
+        goalUnits.push(value.unit);
+        goalIsEveryday.push(value.everyday);
+
+        // render goals
+        $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + key + '">' + value.name + '</a>' );
+      });
+      // upon goal selected
+      $('#modalHabit .list-group-item[data-toggle="list"]').on('shown.bs.tab', function (e) {
+        localStorage.goal = e.target.text;
+        // console.log( $(this).attr('aria-controls') );
+        // console.log($(this).data('index'));
+        $('.btn-habit-category').text(localStorage.goal + "를");
+        $('.btn-habit-category').addClass('btn-outline-dark');
+
+        localStorage.selectedGoalName = $(this).attr('aria-controls');
+
+        // re-render amounts
+        $('#formControlAmount').parent().removeClass('d-none');
+        if(!$('#formControlAmount2').parent().hasClass('d-none')) {
+          $('#formControlAmount2').parent().addClass('d-none');
+        }
+
+        $('#formControlAmount').empty();
+        var selectedAmounts = goals[localStorage.selectedGoalName].amount;
+        selectedUnit = goals[localStorage.selectedGoalName].unit;
+
+        for(i=0; i<selectedAmounts.length; i++) {
+          $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
+          if(i == 0) {
+            $('#formControlAmount option:selected').append( " " + selectedUnit );
+            // save the initial value
+            localStorage.amount = selectedAmounts[i];
+          }
+        }
+
+        // change ending phrase depends on the goal
+        if( goals[localStorage.selectedGoalName].everyday == false ) {
+          $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
+          $('.promise-text-sub').text("");
+        } else {
+          $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
+          $('.promise-text-sub').text("3일 결석까지 인정");
+        }
+
+        if( $('#goalInput').val().length > 0 ) {
+          $('#goalInput').val("");
+        }
+
+        $('#modalHabit').modal('hide');
+      });
+
+    },
+    error: function(xhr, text) {
+      console.log('An error occurred', xhr, text);
+    },
+    url: "/data/goals.json"
+  });
+
+
 
   // if canceled sharing
   if(localStorage.didShare != "true") {
@@ -197,7 +240,7 @@ $(function() {
 
 
   // register and share
-  $('.btn-register').submit(function() {
+  $('.btn-register').click(function() {
 
     saveReward();
 
@@ -233,55 +276,55 @@ $(function() {
 
 
   // render goals
-  for(i=0; i<goalControlNames.length; i++) {
-    $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + goalControlNames[i] + '" data-index="' + i + '">' + goalNames[i] + '</a>' );
-  }
+  // for(i=0; i<goalControlNames.length; i++) {
+  //   $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + goalControlNames[i] + '" data-index="' + i + '">' + goalNames[i] + '</a>' );
+  // }
 
   // habit category: modal
-  // upon goal selected
-  $('#modalHabit .list-group-item[data-toggle="list"]').on('shown.bs.tab', function (e) {
-    localStorage.goal = e.target.text;
-    // console.log( $(this).attr('aria-controls') );
-    // console.log($(this).data('index'));
-    $('.btn-habit-category').text(localStorage.goal + "를");
-    $('.btn-habit-category').addClass('btn-outline-dark');
-
-    localStorage.selectedGoalName = $(this).attr('aria-controls');
-
-    // re-render amounts
-    $('#formControlAmount').parent().removeClass('d-none');
-    if(!$('#formControlAmount2').parent().hasClass('d-none')) {
-      $('#formControlAmount2').parent().addClass('d-none');
-    }
-
-    $('#formControlAmount').empty();
-    var selectedAmounts = goals[localStorage.selectedGoalName].amount;
-    selectedUnit = goals[localStorage.selectedGoalName].unit;
-
-    for(i=0; i<selectedAmounts.length; i++) {
-      $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
-      if(i == 0) {
-        $('#formControlAmount option:selected').append( " " + selectedUnit );
-        // save the initial value
-        localStorage.amount = selectedAmounts[i];
-      }
-    }
-
-    // change ending phrase depends on the goal
-    if( goals[localStorage.selectedGoalName].everyday == false ) {
-      $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
-      $('.promise-text-sub').text("");
-    } else {
-      $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
-      $('.promise-text-sub').text("3일 결석까지 인정");
-    }
-
-    if( $('#goalInput').val().length > 0 ) {
-      $('#goalInput').val("");
-    }
-
-    $('#modalHabit').modal('hide');
-  });
+  // // upon goal selected
+  // $('#modalHabit .list-group-item[data-toggle="list"]').on('shown.bs.tab', function (e) {
+  //   localStorage.goal = e.target.text;
+  //   // console.log( $(this).attr('aria-controls') );
+  //   // console.log($(this).data('index'));
+  //   $('.btn-habit-category').text(localStorage.goal + "를");
+  //   $('.btn-habit-category').addClass('btn-outline-dark');
+  //
+  //   localStorage.selectedGoalName = $(this).attr('aria-controls');
+  //
+  //   // re-render amounts
+  //   $('#formControlAmount').parent().removeClass('d-none');
+  //   if(!$('#formControlAmount2').parent().hasClass('d-none')) {
+  //     $('#formControlAmount2').parent().addClass('d-none');
+  //   }
+  //
+  //   $('#formControlAmount').empty();
+  //   var selectedAmounts = goals[localStorage.selectedGoalName].amount;
+  //   selectedUnit = goals[localStorage.selectedGoalName].unit;
+  //
+  //   for(i=0; i<selectedAmounts.length; i++) {
+  //     $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
+  //     if(i == 0) {
+  //       $('#formControlAmount option:selected').append( " " + selectedUnit );
+  //       // save the initial value
+  //       localStorage.amount = selectedAmounts[i];
+  //     }
+  //   }
+  //
+  //   // change ending phrase depends on the goal
+  //   if( goals[localStorage.selectedGoalName].everyday == false ) {
+  //     $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
+  //     $('.promise-text-sub').text("");
+  //   } else {
+  //     $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
+  //     $('.promise-text-sub').text("3일 결석까지 인정");
+  //   }
+  //
+  //   if( $('#goalInput').val().length > 0 ) {
+  //     $('#goalInput').val("");
+  //   }
+  //
+  //   $('#modalHabit').modal('hide');
+  // });
 
 
 

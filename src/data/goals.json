@@ -62,9 +62,37 @@
 		"unit" : "분씩",
 		"everyday" : true
 	},
+	"writing" : {
+		"controlName" : "writing",
+		"name" : "글 쓰기",
+		"amount" : [1, 2, 3],
+		"unit" : "번씩",
+		"everyday" : true
+	},
+	"diary" : {
+		"controlName" : "diary",
+		"name" : "일기 쓰기",
+		"amount" : [],
+		"unit" : "",
+		"everyday" : true
+	},
+	"dogood" : {
+		"controlName" : "dogood",
+		"name" : "착한일",
+		"amount" : [1, 2, 3],
+		"unit" : "번씩",
+		"everyday" : true
+	},
+	"overcomefear" : {
+		"controlName" : "overcomefear",
+		"name" : "두려움 극복하기",
+		"amount" : [1, 2, 3],
+		"unit" : "번씩",
+		"everyday" : true
+	},
 	"quitsmoking" : {
 		"controlName" : "quitsmoking",
-		"name" : "금연",
+		"name" : "담배 끊기",
 		"amount" : [],
 		"unit" : "",
 		"everyday" : false
