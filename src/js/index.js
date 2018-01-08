@@ -171,9 +171,7 @@ $(function() {
 
 
 
-  $('.btn-share').click(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
+  $('.btn-share').click(function () {
 
     // console.log("SHARE!");
     saveReward();
@@ -199,9 +197,7 @@ $(function() {
 
 
   // register and share
-  $('.btn-register').submit(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  $('.btn-register').submit(function() {
 
     saveReward();
 
