@@ -37,6 +37,16 @@ $.getJSON("/data/goals.json", function(data) {
 
 
 
+// prevent default enter key
+$(document).keypress(
+  function(event){
+    if(event.which === 13) {
+      event.preventDefault();
+    }
+});
+
+
+
 
 $(function() {
 
@@ -146,7 +156,10 @@ $(function() {
 
 
 
-  $('.btn-share').click(function () {
+  $('.btn-share').click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     // console.log("SHARE!");
     saveReward();
 
@@ -171,18 +184,19 @@ $(function() {
 
 
   // register and share
-  $('.btn-register').click(function(e) {
+  $('.btn-register').submit(function(e) {
     e.preventDefault();
+    e.stopPropagation();
 
     saveReward();
 
     if(isMobile) {
-      console.log("MOBILE");
+      // console.log("MOBILE");
       firebase.auth().signInWithRedirect(provider);
 
 
     } else {
-      console.log("DESKTOP");
+      // console.log("DESKTOP");
       firebase.auth().signInWithPopup(provider).then(function(result) {
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var token = result.credential.accessToken;
@@ -225,6 +239,10 @@ $(function() {
 
     // re-render amounts
     $('#formControlAmount').parent().removeClass('d-none');
+    if(!$('#formControlAmount2').parent().hasClass('d-none')) {
+      $('#formControlAmount2').parent().addClass('d-none');
+    }
+
     $('#formControlAmount').empty();
     var selectedAmounts = goals[localStorage.selectedGoalName].amount;
     selectedUnit = goals[localStorage.selectedGoalName].unit;
@@ -261,7 +279,9 @@ $(function() {
       $('.btn-habit-category').text( $('#goalInput').val() + "를" );
       $('.btn-habit-category').addClass('btn-outline-dark');
 
-      $('#formControlAmount2').parent().addClass('d-none');
+      if(!$('#formControlAmount').parent().hasClass('d-none')) {
+        $('#formControlAmount').parent().addClass('d-none');
+      }
       $('#formControlAmount2').parent().removeClass('d-none');
     }
 
@@ -271,11 +291,18 @@ $(function() {
 
   // if textfield is being filled..
   $('#goalInput').keyup(function(e) {
+    // console.log(e.keyCode);
+    if(e.which === 13) {
+      // if enter is pressed
+      $('#btnGoalConfirm').click();
+    }
+
     if(e.target.value.length > 0) {
       // unselect the other
       $('#modalHabit .active').removeClass('active');
     }
   });
+
 
 
 
