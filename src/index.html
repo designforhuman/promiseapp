@@ -93,12 +93,13 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">목표 선택</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">목표</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
+                  <input class="form-control mb-3" id="goalInput" type="text" placeholder="직접 입력">
                   <div class="list-group" id="goalList" role="tablist">
                   </div>
                 </div>
@@ -119,9 +120,12 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <select class="form-control" id="formControlAmount">
-          </select>
+        <div class="form-group d-none">
+          <select class="form-control" id="formControlAmount"></select>
+        </div>
+
+        <div class="form-group d-none">
+          <input class="form-control mb-3" id="formControlAmount2" type="text" placeholder="몇 개씩, 몇 분씩 등 시간/양 입력">
         </div>
 
         <div class="form-group">

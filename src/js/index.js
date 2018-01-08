@@ -220,11 +220,11 @@ $(function() {
     // console.log($(this).data('index'));
     $('.btn-habit-category').text(localStorage.goal + "를");
     $('.btn-habit-category').addClass('btn-outline-dark');
-    $('#modalHabit').modal('hide');
 
     localStorage.selectedGoalName = $(this).attr('aria-controls');
 
     // re-render amounts
+    $('#formControlAmount').parent().removeClass('d-none');
     $('#formControlAmount').empty();
     var selectedAmounts = goals[localStorage.selectedGoalName].amount;
     selectedUnit = goals[localStorage.selectedGoalName].unit;
@@ -239,19 +239,44 @@ $(function() {
     }
 
     // change ending phrase depends on the goal
-    if( goals[selectedGoalName].everyday == false ) {
+    if( goals[localStorage.selectedGoalName].everyday == false ) {
       $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
       $('.promise-text-sub').text("");
     } else {
       $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
       $('.promise-text-sub').text("3일 결석까지 인정");
     }
+
+    if( $('#goalInput').val().length > 0 ) {
+      $('#goalInput').val("");
+    }
+
+    $('#modalHabit').modal('hide');
   });
+
 
 
   $('#modalHabit .btn-primary').click(function() {
+    if( $('#goalInput').val().length > 0 ) {
+      $('.btn-habit-category').text( $('#goalInput').val() + "를" );
+      $('.btn-habit-category').addClass('btn-outline-dark');
+
+      $('#formControlAmount2').parent().addClass('d-none');
+      $('#formControlAmount2').parent().removeClass('d-none');
+    }
+
     $('#modalHabit').modal('hide');
   });
+
+
+  // if textfield is being filled..
+  $('#goalInput').keyup(function(e) {
+    if(e.target.value.length > 0) {
+      // unselect the other
+      $('#modalHabit .active').removeClass('active');
+    }
+  });
+
 
 
 
