@@ -23,15 +23,30 @@ var goalUnits = [];
 var goalIsEveryday = [];
 var goalIndices = [];
 
-$.getJSON("/data/goals.json", function(data) {
-  goals = data;
-  $.each(data, function(key, value) {
-    goalControlNames.push(key);
-    goalNames.push(value.name);
-    goalAmounts.push(value.amount);
-    goalUnits.push(value.unit);
-    goalIsEveryday.push(value.everyday);
-  });
+// $.getJSON("/data/goals.json", function(data) {
+//   goals = data;
+//   $.each(data, function(key, value) {
+//     goalControlNames.push(key);
+//     goalNames.push(value.name);
+//     goalAmounts.push(value.amount);
+//     goalUnits.push(value.unit);
+//     goalIsEveryday.push(value.everyday);
+//   });
+// });
+
+$.ajax({
+  cache: false,
+  success: function(data) {
+    goals = data;
+    $.each(data, function(key, value) {
+      goalControlNames.push(key);
+      goalNames.push(value.name);
+      goalAmounts.push(value.amount);
+      goalUnits.push(value.unit);
+      goalIsEveryday.push(value.everyday);
+    });
+  },
+  url: "/data/goals.json"
 });
 
 
