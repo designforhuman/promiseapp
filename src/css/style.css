@@ -3,7 +3,7 @@
 }
 
 
-.btn-container-checkin {
+.btn-checkin-container {
   width: 320px;
   height: 320px;
   margin: auto;
@@ -16,7 +16,30 @@
   margin: auto;
   font-size: 48px;
   font-weight: 200;
+  background-color: #868E96;
 }
+
+
+.btn-checkin-enabled {
+  background-color: #057BFF;
+  -webkit-box-shadow: 0px 24px 88px -1px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 24px 88px -1px rgba(0,0,0,0.3);
+  box-shadow: 0px 24px 88px -1px rgba(0,0,0,0.3);
+}
+
+
+.icon-check-container {
+  margin: 0 auto;
+  padding-top: 32px;
+  color: rgba(255, 255, 255, 0.2)
+}
+
+.icon-check-container-enabled {
+  color: rgba(255, 255, 255, 1);
+}
+
+
+
 
 
 .checkInProgress {
@@ -24,6 +47,13 @@
   width: 100%;
   margin: 0 auto;
 }
+
+
+.checkin-progress-title {
+  text-align: center;
+}
+
+
 
 
 .progressDotContainer {
@@ -44,7 +74,7 @@
 }
 
 .checkedIn {
-  background-color: 
+  background-color:
 }
 
 

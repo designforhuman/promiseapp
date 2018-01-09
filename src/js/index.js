@@ -22,6 +22,7 @@ var goalAmounts = [];
 var goalUnits = [];
 var goalIsEveryday = [];
 var goalIndices = [];
+var selectedAmount = 0;
 
 
 
@@ -72,14 +73,14 @@ $(function() {
 
         $('#formControlAmount').empty();
         var selectedAmounts = goals[localStorage.selectedGoalName].amount;
-        selectedUnit = goals[localStorage.selectedGoalName].unit;
+        localStorage.unit = goals[localStorage.selectedGoalName].unit;
 
         for(i=0; i<selectedAmounts.length; i++) {
           $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
           if(i == 0) {
-            $('#formControlAmount option:selected').append( " " + selectedUnit );
+            $('#formControlAmount option:selected').append( " " + localStorage.unit );
             // save the initial value
-            localStorage.amount = selectedAmounts[i];
+            selectedAmount = selectedAmounts[i];
           }
         }
 
@@ -118,14 +119,13 @@ $(function() {
 
 
   // variables
-  var selectedUnit = "";
   var selectedDaysTotal = $('#formControlDaysTotal option:selected');
   var selectedAmount = $('#formControlAmount option:selected');
 
   localStorage.daysTotal = selectedDaysTotal.val();
-  localStorage.amount = selectedAmount.val();
+  // selectedAmount = selectedAmount.val();
+  localStorage.unit = "";
   localStorage.isFirstTime = "false";
-
 
   selectedDaysTotal.append( " 일간" );
   selectedAmount.append( " 개씩" );
@@ -138,9 +138,10 @@ $(function() {
   function share(uid) {
     if(isMobile) {
       // console.log("THIS IS MOBILE");
+      console.log("UNIT: " + localStorage.unit);
 
       // update database
-      updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+      updatePromise(uid, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
 
       // var shareUrl = "https://www.facebook.com/dialog/share?app_id=137706030341228&display=touch&href=https://promiseappcom.firebaseapp.com/&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
       var shareUrl = "https://www.facebook.com/dialog/feed?app_id=137706030341228&ref=promiseshare&link=https://promiseappcom.firebaseapp.com&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
@@ -160,7 +161,7 @@ $(function() {
           localStorage.isFirstTime = true;
 
           // update database
-          updatePromise(uid, localStorage.goal, localStorage.daysTotal, localStorage.amount, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+          updatePromise(uid, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
 
           // move to checkin page
           // console.log('Move to checkin page.');
@@ -215,13 +216,15 @@ $(function() {
 
 
   $('.btn-share').click(function () {
-
     // console.log("SHARE!");
     saveReward();
 
+    // see if there is user typed unit, if so, replace the old one
+    if( $('#formControlAmount2').val().length > 0 ) {
+      localStorage.unit = $('#formControlAmount2').val();
+    }
+
     var user = firebase.auth().currentUser;
-    // console.log(user);
-    // console.log(user.uid);
     share(user.uid);
   });
 
@@ -275,58 +278,6 @@ $(function() {
 
 
 
-  // render goals
-  // for(i=0; i<goalControlNames.length; i++) {
-  //   $('#goalList').append( '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab" aria-controls="' + goalControlNames[i] + '" data-index="' + i + '">' + goalNames[i] + '</a>' );
-  // }
-
-  // habit category: modal
-  // // upon goal selected
-  // $('#modalHabit .list-group-item[data-toggle="list"]').on('shown.bs.tab', function (e) {
-  //   localStorage.goal = e.target.text;
-  //   // console.log( $(this).attr('aria-controls') );
-  //   // console.log($(this).data('index'));
-  //   $('.btn-habit-category').text(localStorage.goal + "를");
-  //   $('.btn-habit-category').addClass('btn-outline-dark');
-  //
-  //   localStorage.selectedGoalName = $(this).attr('aria-controls');
-  //
-  //   // re-render amounts
-  //   $('#formControlAmount').parent().removeClass('d-none');
-  //   if(!$('#formControlAmount2').parent().hasClass('d-none')) {
-  //     $('#formControlAmount2').parent().addClass('d-none');
-  //   }
-  //
-  //   $('#formControlAmount').empty();
-  //   var selectedAmounts = goals[localStorage.selectedGoalName].amount;
-  //   selectedUnit = goals[localStorage.selectedGoalName].unit;
-  //
-  //   for(i=0; i<selectedAmounts.length; i++) {
-  //     $('#formControlAmount').append( '<option value="' + selectedAmounts[i] + '">' + selectedAmounts[i] + '</option>' );
-  //     if(i == 0) {
-  //       $('#formControlAmount option:selected').append( " " + selectedUnit );
-  //       // save the initial value
-  //       localStorage.amount = selectedAmounts[i];
-  //     }
-  //   }
-  //
-  //   // change ending phrase depends on the goal
-  //   if( goals[localStorage.selectedGoalName].everyday == false ) {
-  //     $('.promise-text').text("할 것을 페이스북 친구들에게 약속합니다.");
-  //     $('.promise-text-sub').text("");
-  //   } else {
-  //     $('.promise-text').text("매일 실행할 것을 페이스북 친구들에게 약속합니다.");
-  //     $('.promise-text-sub').text("3일 결석까지 인정");
-  //   }
-  //
-  //   if( $('#goalInput').val().length > 0 ) {
-  //     $('#goalInput').val("");
-  //   }
-  //
-  //   $('#modalHabit').modal('hide');
-  // });
-
-
 
   $('#modalHabit .btn-primary').click(function() {
     if( $('#goalInput').val().length > 0 ) {
@@ -368,10 +319,10 @@ $(function() {
       $(this).text( $(this).val() );
     });
     var selectedOption = $('#formControlAmount option:selected')
-    selectedOption.append( " " + selectedUnit );
+    selectedOption.append( " " + localStorage.unit );
 
     // save to local storage for checkin screen
-    localStorage.amount = selectedOption.val();
+    selectedAmount = selectedOption.val();
   });
 
 
@@ -401,13 +352,14 @@ $(function() {
   }
 
 
-  function updatePromise(userId, goal, daysTotal, amount, rewardOption, rewardInput, isFirstTime) {
+  function updatePromise(userId, goal, daysTotal, amount, unit, rewardOption, rewardInput, isFirstTime) {
     // console.log("USERID: " + userId);
     // console.log("RO: " + goal);
     database.ref('promises/' + userId).set({
       goal: goal,
       daysTotal: daysTotal,
       amount: amount,
+      unit: unit,
       rewardOption: rewardOption,
       rewardInput: rewardInput,
       isFirstTime: isFirstTime,

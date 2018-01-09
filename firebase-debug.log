@@ -1,0 +1,41 @@
+[debug] [2018-01-09T03:23:54.520Z] ----------------------------------------------------------------------
+[debug] [2018-01-09T03:23:54.523Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-01-09T03:23:54.523Z] CLI Version:   3.16.0
+[debug] [2018-01-09T03:23:54.523Z] Platform:      darwin
+[debug] [2018-01-09T03:23:54.523Z] Node Version:  v8.9.3
+[debug] [2018-01-09T03:23:54.523Z] Time:          Tue Jan 09 2018 12:23:54 GMT+0900 (KST)
+[debug] [2018-01-09T03:23:54.523Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-01-09T03:23:54.542Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-01-09T03:23:54.542Z] > authorizing via signed-in user
+[debug] [2018-01-09T03:23:54.544Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-01-09T03:23:54.544Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/KkIdz6YhQlHzI9eu79E3yb47a3dsVCfhQj_m3MDEo3g',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Tue Jan 09 2018 12:23:54 GMT+0900 (KST)
+[debug] [2018-01-09T03:23:54.830Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-09T03:23:54.847Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/promiseappcom  
+  
+ Tue Jan 09 2018 12:23:54 GMT+0900 (KST)
+[debug] [2018-01-09T03:23:55.908Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-09T03:23:55.909Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/promiseappcom/tokens  
+  
+ Tue Jan 09 2018 12:23:55 GMT+0900 (KST)
+[debug] [2018-01-09T03:23:56.614Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/davidlee/Dropbox (Daylight)/WhitePeacock/Dev/Web/v3'...
+[info] 
+[debug] [2018-01-09T03:23:56.616Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/promiseappcom  
+  
+ Tue Jan 09 2018 12:23:56 GMT+0900 (KST)
+[debug] [2018-01-09T03:23:57.786Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-09T03:23:57.789Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/402530902396/clients/_:getWebAppConfig  
+  
+ Tue Jan 09 2018 12:23:57 GMT+0900 (KST)
+[debug] [2018-01-09T03:23:58.751Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: src
+[info] ✔  hosting: Local server: http://localhost:5000
+

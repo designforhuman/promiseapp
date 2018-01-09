@@ -34,10 +34,11 @@ $(function() {
 
 
 
+
     // fill progress dots
     function fillProgressDots(total) {
       for(i=0; i<total; i++) {
-        $('.checkInProgress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center day' + i + '"></div></div>');
+        $('.checkin-progress .row').append('<div class="col-4 col-md-2 progressDotContainer"><div class="progressDot align-items-center day' + i + '"></div></div>');
       }
     }
 
@@ -46,9 +47,9 @@ $(function() {
 
       for(i=0; i<progressLog.length; i++) {
         if(progressLog[i]) {
-          $('.checkInProgress .day' + i + '').addClass("bg-primary");
+          $('.checkin-progress .day' + i + '').addClass("bg-primary");
         } else {
-          $('.checkInProgress .day' + i + '').addClass("bg-danger");
+          $('.checkin-progress .day' + i + '').addClass("bg-danger");
         }
       }
     }
@@ -67,6 +68,7 @@ $(function() {
           var isFirstTime = value.isFirstTime;
           var daysTotal = value.daysTotal;
           var amount = value.amount;
+          var unit = value.unit;
           var goal = value.goal;
           var rewardOption = value.rewardOption;
           var rewardInput = value.rewardInput;
@@ -78,7 +80,7 @@ $(function() {
           }
 
           // console.log(snapshot.val().amount);
-          $('.goal').text('목표: ' + daysTotal + '일간 매일 ' + amount + '개씩 ' + goal);
+          $('.goal').text('목표: ' + daysTotal + '일간 매일 ' + amount + unit + ' ' + goal);
           $('.reward').text(rewardOption + ' ' + rewardInput);
 
           // status check
@@ -103,9 +105,10 @@ $(function() {
             }
 
             // console.log("DAYSTREAK: " + dayStreak);
-            $('.btn-checkin').text(dayStreak);
+            // $('.btn-checkin').text(dayStreak);
 
             // fill progress dots
+            updateProgress(progressLog.length, ((progressLog.length * 100) / daysTotal).toPrecision(2));
             fillProgressDots(daysTotal);
             updateProgressDots(progressLog);
 
@@ -124,11 +127,11 @@ $(function() {
     });
 
 
-
-
     $('#modalShareSuccessful .btn-primary').click(function() {
       $('#modalShareSuccessful').modal('hide');
     });
+
+
 
 
 
@@ -159,15 +162,17 @@ $(function() {
 
     function disableCheckInBtn() {
       $('.btn-checkin').prop('disabled', true);
-      $('.btn-checkin').removeClass('btn-primary');
-      $('.btn-checkin').addClass('btn-secondary');
+      $('.btn-checkin').removeClass('btn-checkin-enabled');
+      // $('.btn-checkin').addClass('btn-secondary');
+      $('.icon-check-container').removeClass('icon-check-container-enabled');
     }
 
 
     function enableCheckInBtn() {
       $('.btn-checkin').prop('disabled', false);
-      $('.btn-checkin').removeClass('btn-secondary');
-      $('.btn-checkin').addClass('btn-primary');
+      // $('.btn-checkin').removeClass('btn-secondary');
+      $('.btn-checkin').addClass('btn-checkin-enabled');
+      $('.icon-check-container').addClass('icon-check-container-enabled');
     }
 
 
@@ -187,7 +192,8 @@ $(function() {
       disableCheckInBtn();
 
       // change the day streak number
-      $('.btn-checkin').text(++dayStreak);
+      ++dayStreak;
+      // $('.btn-checkin').text(++dayStreak);
 
       // add today's checkin
       var dayDifference = 0;
@@ -204,6 +210,7 @@ $(function() {
       // redraw progress dots
       // updateProgressDots(dayStreak);
       updateProgressDots(progressLog);
+      updateProgress(progressLog.length, ((progressLog.length * 100) / localStorage.daysTotal).toPrecision(2));
 
       // update cloud
       var dataCheckIn = {
@@ -220,13 +227,16 @@ $(function() {
       database.ref().update(updates);
       // console.log(progressLog);
 
-
-
     });
 
 
+
+    function updateProgress(daysPassed, percentage) {
+      $('.checkin-progress-title .daystreak').text(daysPassed + "/" + localStorage.daysTotal);
+      $('.checkin-progress-title .percentage').text(percentage);
+    }
+
+
+
   }
-
-
-
 });

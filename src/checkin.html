@@ -51,15 +51,22 @@
         &nbsp;
       </div>
 
-      <div class="btn-container-checkin d-flex mb-5">
-        <button type="button" class="btn-checkin dayStreak btn btn-secondary btn-lg rounded-circle"></button>
+      <div class="btn-checkin-container d-flex mb-5">
+        <div class="btn-checkin dayStreak btn btn-secondary btn-lg rounded-circle">
+          <div class="icon-check-container icon-check-container-enabled"><i class="fal fa-check fa-lg icon-check"></i></div>
+        </div>
       </div>
 
       <!-- <div class="dayStreak-container">
         <h2 class="dayStreak mb-5 text-center">0</h2>
       </div> -->
 
-      <div class="checkInProgress container">
+      <div class="checkin-progress container">
+        <div class="pb-5 text-secondary checkin-progress-title">
+          <span class="title">진행률:</span>
+          <span class="daystreak"></span>
+          (<span class="percentage"></span>%)
+        </div>
         <div class="row"></div>
       </div>
 
@@ -74,7 +81,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script> -->
 
+    <script defer src="/js/fontawesome-all.min.js"></script>
     <script src="./js/config.js"></script>
     <script src="./js/checkin.js"></script>
   </body>
