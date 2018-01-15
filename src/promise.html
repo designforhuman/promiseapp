@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Promise</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <meta property="og:url"           content="https://promiseappcom.firebaseapp.com/" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Promise" />
+    <meta property="og:description"   content="Hold yourself accountable for your daily goals and habits by making a promise with others." />
+    <meta property="og:image"         content="https://promiseappcom.firebaseapp.com/img/logo.png" />
+    <meta property="fb:app_id"        content="137706030341228" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+  </head>
+
+  <body>
+    <script>
+      // Facebook API
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '137706030341228',
+          status     : true,
+          xfbml      : true,
+          version    : 'v2.11',
+        });
+        FB.AppEvents.logPageView();
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+
+
+    <!-- Modal -->
+    <div class="modal-registered modal" id="modalRegistered" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Welcome</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>회원 가입을 축하합니다!</p>
+            <p>Promise는 당신의 목표를 이루어 드리기 위해 만들어졌습니다. 목표를 성취하는 가장 강력한 방법 중에 하나는 친구들에게 공유하는 것입니다. 혼자 할 때보다 성공할 확률이 5배 이상 높습니다.</p>
+            <small class="form-text text-muted">*공유 필수</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-share">약속 공유</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <nav class="sticky-top navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">
+        Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small>
+      </span>
+    </nav>
+
+    <div class="container">
+
+      <!-- <div class="m-3 text-center">
+        <h5>2018년 약속</h5>
+      </div> -->
+
+      <form id="formPromise" novalidate>
+        <div class="form-group mt-3">
+          나는 오늘부터
+        </div>
+
+        <div class="form-group">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn-habit-category btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#modalHabit">
+            이것을...
+          </button>
+          <div class="invalid-feedback">
+          목표를 선택해주세요.
+          </div>
+
+          <!-- Modal -->
+          <div class="modal-habit modal" id="modalHabit" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">목표</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input class="form-control mb-3" id="goalInput" type="text" placeholder="직접 입력">
+                  <div class="list-group" id="goalList" role="tablist">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                  <button type="button" class="btn btn-primary" id="btnGoalConfirm">확인</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <select class="form-control" id="formControlDaysTotal">
+            <option value="30" selected>30</option>
+            <option value="60">60</option>
+            <option value="90">90</option>
+          </select>
+        </div>
+
+        <div class="form-group d-none">
+          <select class="form-control" id="formControlAmount"></select>
+        </div>
+
+        <div class="form-group d-none">
+          <input class="form-control mb-3" id="formControlAmount2" type="text" placeholder="예: 몇 개씩, 몇 분씩" required>
+          <div class="invalid-feedback">
+          내용을 입력해주세요.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="promise-text">매일 실행할 것을 페이스북 친구들에게 약속합니다.</div>
+          <small class="promise-text-sub form-text text-muted">3일 결석까지 인정</small>
+        </div>
+
+        <div class="p-3"> </div>
+
+        <div class="form-group">
+          <div class="btn-reward-option btn-group" style="width: 100%;" data-toggle="buttons">
+            <label class="col btn btn-secondary active">
+              <input type="radio" name="reward-options" id="rewardFail" autocomplete="off">실패하면
+            </label>
+            <label class="col btn btn-secondary">
+              <input type="radio" name="reward-options" id="rewardSuccess" autocomplete="off">성공하면
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input required type="text" class="form-control" id="rewardInput" placeholder="이렇게 하겠습니다." >
+          <div class="invalid-feedback">
+            실패하거나 성공했을 경우 할 것을 입력해주세요.
+          </div>
+          <small id="rewardInputHelp" class="form-text text-muted">예시: 유니세프에 얼마를 기부하겠습니다, 페북 라이브로 노래를 부르겠습니다, 댓글 선착순 몇명에게 밥을 사겠습니다.</small>
+        </div>
+
+        <div class="p-3"> </div>
+
+        <!-- <div class="mb-3 btn-register-container">
+          <button type="button" class="btn-register btn btn-primary btn-block btn-lg">페이스북으로 가입</button>
+        </div> -->
+
+        <div class="mb-3 btn-share-container">
+          <button type="button" class="btn-share btn btn-primary btn-block btn-lg">약속 공유</button>
+        </div>
+
+
+
+      </form>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+    <script src="./js/config.js"></script>
+    <script src="./js/promise.js"></script>
+  </body>
+</html>

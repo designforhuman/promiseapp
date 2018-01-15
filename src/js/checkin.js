@@ -6,7 +6,7 @@ var didShare = false;
 if(window.location.href.indexOf('error') != -1) {
   localStorage.didShare = "false";
   alert('공유해야 다음 단계로 넘어가실 수 있습니다.');
-  window.location.href = 'https://promiseappcom.firebaseapp.com/';
+  window.location.href = 'https://promise.davidlee.kr/promise.html';
 } else {
   localStorage.didShare = "true";
   didShare = true;
@@ -63,15 +63,18 @@ $(function() {
         // isLoggedIn = true;
         var userId = user.uid;
 
-        return database.ref('/promises/' + userId).once('value').then(function(snapshot) {
-          var value = snapshot.val();
-          var isFirstTime = value.isFirstTime;
-          var daysTotal = value.daysTotal;
-          var amount = value.amount;
-          var unit = value.unit;
-          var goal = value.goal;
-          var rewardOption = value.rewardOption;
-          var rewardInput = value.rewardInput;
+        return database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
+          var val = snapshot.val();
+          var info = snapshot.child('info').val();
+          // console.log(value);
+          // console.log(snapshot.child('info').val());
+          var daysTotal = info.daysTotal;
+          var amount = info.amount;
+          var unit = info.unit;
+          var goal = info.goal;
+          var rewardOption = info.rewardOption;
+          var rewardInput = info.rewardInput;
+          var isFirstTime = val.isFirstTime;
 
           // show popup
           // console.log("FIRST: " + isFirstTime);
@@ -86,41 +89,37 @@ $(function() {
           // status check
           // diable checkin button if already done for today
           // read day streak
-          database.ref('/checkins/' + userId).once('value').then(function(snapshot) {
-            var val = snapshot.val();
-            if(!isFirstTime) {
-              lastCheckedInDate = val.lastCheckedInDate;
-              dayStreak = val.dayStreak;
+          if(!isFirstTime) {
+            lastCheckedInDate = val.lastCheckedInDate;
+            dayStreak = val.dayStreak;
 
-              // check if there is already a previous progress
-              // if so, copy the existing one from cloud
-              if(val.progressLog != undefined) {
-                progressLog = val.progressLog;
-              }
-            } else {
-              var updates = {};
-              updates['/promises/' + userId + '/isFirstTime'] = false;
-              // console.log(updates);
-              database.ref().update(updates);
+            // check if there is already a previous progress
+            // if so, copy the existing one from cloud
+            if(val.progressLog != undefined) {
+              progressLog = val.progressLog;
             }
+          } else {
+            var updates = {};
+            updates['/checkins/' + userId + '/isFirstTime'] = false;
+            // console.log(updates);
+            database.ref().update(updates);
+          }
 
-            // console.log("DAYSTREAK: " + dayStreak);
-            // $('.btn-checkin').text(dayStreak);
+          // console.log("DAYSTREAK: " + dayStreak);
+          // $('.btn-checkin').text(dayStreak);
 
-            // fill progress dots
-            updateProgress(progressLog.length, ((progressLog.length * 100) / daysTotal).toPrecision(2));
-            fillProgressDots(daysTotal);
-            updateProgressDots(progressLog);
+          // fill progress dots
+          updateProgress(progressLog.length, (progressLog.length * 100) / daysTotal);
+          fillProgressDots(daysTotal);
+          updateProgressDots(progressLog);
 
-            if( calcDateDifference(lastCheckedInDate) == 0) {
-              // if already checked in today
-              // console.log("SAME!");
-            } else {
-              // console.log("DIFFERENT!");
-              enableCheckInBtn();
-            }
-          });
-
+          if( calcDateDifference(lastCheckedInDate) == 0) {
+            // if already checked in today
+            // console.log("SAME!");
+          } else {
+            // console.log("DIFFERENT!");
+            enableCheckInBtn();
+          }
 
         });
       }
@@ -210,20 +209,21 @@ $(function() {
       // redraw progress dots
       // updateProgressDots(dayStreak);
       updateProgressDots(progressLog);
-      updateProgress(progressLog.length, ((progressLog.length * 100) / localStorage.daysTotal).toPrecision(2));
+      updateProgress(progressLog.length, (progressLog.length * 100) / localStorage.daysTotal);
 
       // update cloud
-      var dataCheckIn = {
+      var data = {
         // isCheckedIn: isCheckedIn,
         lastCheckedInDate: today,
         dayStreak: dayStreak,
-        daysTotal: localStorage.daysTotal,
         progressLog: progressLog,
       };
 
 
       var updates = {};
-      updates['/checkins/' + userId] = dataCheckIn;
+      updates['/checkins/' + userId + '/lastCheckedInDate'] = data.lastCheckedInDate;
+      updates['/checkins/' + userId + '/dayStreak'] = data.dayStreak;
+      updates['/checkins/' + userId + '/progressLog'] = data.progressLog;
       database.ref().update(updates);
       // console.log(progressLog);
 
@@ -233,7 +233,7 @@ $(function() {
 
     function updateProgress(daysPassed, percentage) {
       $('.checkin-progress-title .daystreak').text(daysPassed + "/" + localStorage.daysTotal);
-      $('.checkin-progress-title .percentage').text(percentage);
+      $('.checkin-progress-title .percentage').text(percentage.toPrecision(2));
     }
 
 

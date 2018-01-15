@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>Promise</title>
 
     <meta charset="UTF-8">
@@ -21,49 +22,61 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+
   </head>
-
   <body>
-    <script>
-      
-    </script>
+    <!-- <script>
+      // Facebook API
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '137706030341228',
+          status     : true,
+          xfbml      : true,
+          version    : 'v2.11',
+        });
+        FB.AppEvents.logPageView();
+      };
 
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script> -->
 
-
+    <nav class="sticky-top navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">
+        Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small>
+      </span>
+      <div class="fb-like" data-href="https://promiseappcom.firebaseapp.com/share.html" data-width="285" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div>
+    </nav>
 
     <div class="container">
+      <div class="container">
 
-      <div class="mt-5 pb-3 text-center">
-        <h5 class="font-weight-bold">Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small></h5>
-      </div>
-
-      <div class="p-3">
-        Promise는 당신의 목표를 이루어 드리기 위해 만들어졌습니다. 목표를 이루는 가장 효과적인 방법 중 하나는, 친구들에게 당신의 계획을 알리는 것입니다. 작은 것부터 시작해 보세요.
-      </div>
-
-      <div class="p-3">
-        <div class="process mb-3 d-flex">
-          <span class="process-icon-container text-center"><i class="far fa-flag fa-lg"></i></span>
-          <div class="process-icon-title pl-3 pt-4">1. 계획 세우기</div>
+        <div class="goal my-3">
+          &nbsp;
         </div>
-        <div class="process mb-3 d-flex">
-          <div class="process-icon-container text-center"><i class="far fa-share fa-lg"></i></div>
-          <div class="process-icon-title pl-3 pt-4">2. 페이스북 공유하기</div>
+
+        <div class="reward mb-5">
+          &nbsp;
         </div>
-        <div class="process mb-3 d-flex">
-          <div class="process-icon-container text-center"><i class="far fa-check fa-lg"></i></div>
-          <div class="process-icon-title pl-3 pt-4">3. 진도 체크하기</div>
+
+        <div class="checkin-progress container">
+          <div class="pb-5 text-secondary checkin-progress-title">
+            <span class="title">진행률:</span>
+            <span class="daystreak"></span>
+            (<span class="percentage"></span>%)
+          </div>
+          <div class="row"></div>
         </div>
+
+
+
       </div>
-
-
-      <div class="m-3 btn-register-container fixed-bottom">
-        <button type="button" class="btn-register btn btn-primary btn-block btn-lg">페이스북으로 가입</button>
-      </div>
-
-
     </div>
-
 
 
 
@@ -72,8 +85,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <script defer src="./js/fontawesome-all.min.js"></script>
     <script src="./js/config.js"></script>
-    <script src="./js/index.js"></script>
+    <script src="./js/share.js"></script>
   </body>
 </html>
