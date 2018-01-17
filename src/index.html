@@ -6,11 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-    <meta property="og:url"           content="https://promiseappcom.firebaseapp.com/" />
+    <meta property="og:url"           content="https://promise.davidlee.kr/" />
     <meta property="og:type"          content="website" />
     <meta property="og:title"         content="Promise" />
     <meta property="og:description"   content="Hold yourself accountable for your daily goals and habits by making a promise with others." />
-    <meta property="og:image"         content="https://promiseappcom.firebaseapp.com/img/logo.png" />
+    <meta property="og:image"         content="https://promise.davidlee.kr/img/logo.png" />
     <meta property="fb:app_id"        content="137706030341228" />
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
@@ -21,15 +21,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112601518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-112601518-1');
+    </script>
   </head>
 
   <body>
-    <script>
-      
-    </script>
-
-
-
 
     <div class="container">
 
@@ -37,7 +41,7 @@
         <h5 class="font-weight-bold">Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small></h5>
       </div>
 
-      <div class="p-3">
+      <div class="p-3 app-description">
         Promise는 당신의 목표를 이루어 드리기 위해 만들어졌습니다. 목표를 이루는 가장 효과적인 방법 중 하나는, 친구들에게 당신의 계획을 알리는 것입니다. 작은 것부터 시작해 보세요.
       </div>
 
@@ -56,6 +60,8 @@
         </div>
       </div>
 
+      <div class="p-4"></div>
+
 
       <div class="m-3 btn-register-container fixed-bottom">
         <button type="button" class="btn-register btn btn-primary btn-block btn-lg">페이스북으로 가입</button>
@@ -72,8 +78,9 @@
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <script defer src="./js/fontawesome-all.min.js"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112601518-1"></script> -->
     <script src="./js/config.js"></script>
     <script src="./js/index.js"></script>
+    <script defer src="./js/fontawesome-all.min.js"></script>
   </body>
 </html>

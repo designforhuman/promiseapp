@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
     <title>Promise</title>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-    <meta property="og:url"           content="https://promiseappcom.firebaseapp.com/" />
+    <meta property="og:url"           content="https://promise.davidlee.kr/share.html" />
     <meta property="og:type"          content="website" />
-    <meta property="og:title"         content="Promise" />
-    <meta property="og:description"   content="Hold yourself accountable for your daily goals and habits by making a promise with others." />
-    <meta property="og:image"         content="https://promiseappcom.firebaseapp.com/img/logo.png" />
+    <meta property="og:title"         content="Promise - 약속" />
+    <meta property="og:description"   content="계획을 공유하고 목표를 실현해보세요." />
+    <meta property="og:image"         content="https://promise.davidlee.kr/img/logo.png" />
     <meta property="fb:app_id"        content="137706030341228" />
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
@@ -23,34 +22,25 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
 
-  </head>
-  <body>
-    <!-- <script>
-      // Facebook API
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '137706030341228',
-          status     : true,
-          xfbml      : true,
-          version    : 'v2.11',
-        });
-        FB.AppEvents.logPageView();
-      };
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112601518-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "https://connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script> -->
+      gtag('config', 'UA-112601518-1');
+    </script>
+  </head>
+
+  <body>
 
     <nav class="sticky-top navbar navbar-light bg-light">
       <span class="navbar-brand mb-0 h1">
         Promise <small><sup class="font-italic text-secondary">&alpha;lpha</sup></small>
       </span>
-      <div class="fb-like" data-href="https://promiseappcom.firebaseapp.com/share.html" data-width="285" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div>
+      <!-- <div class="fb-like" data-href="https://promise.davidlee.kr/share.html" data-width="285" data-layout="button" data-action="like" data-size="large" data-show-faces="false" data-share="true"></div> -->
+      <a href="mailto:david@daylightdesign.com" class="text-dark"><i class="fal fa-bug con-check"></i></a>
     </nav>
 
     <div class="container">
@@ -87,5 +77,6 @@
 
     <script src="./js/config.js"></script>
     <script src="./js/share.js"></script>
+
   </body>
 </html>

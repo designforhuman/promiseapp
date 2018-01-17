@@ -2,7 +2,7 @@
 
 // facebook auth
 var provider = new firebase.auth.FacebookAuthProvider();
-
+// provider.addScope('publish_actions');
 
 
 // detect if it is mobile
@@ -11,9 +11,18 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Opera Mobile|
   isMobile = true;
 }
 
+// set the default register button state
+$('.btn-register').prop('disabled', true);
 
 
 $(function() {
+  if(localStorage.loggedIn === "true") {
+    $('.btn-register').text("loading...");
+    $('.btn-register').prop('disabled', true);
+    localStorage.loggedIn = "false";
+  } else {
+    $('.btn-register').prop('disabled', false);
+  }
 
   if(isMobile) {
     firebase.auth().getRedirectResult().then(function(result) {
@@ -23,9 +32,9 @@ $(function() {
 
         // write user data async
         var user = result.user;
-        writeUserData(user.uid, user.displayName, user.email);
+        writeUserData(user.uid, user.displayName, user.email, token);
 
-        window.location.href = '/promise.html';
+        // window.location.href = '/promise.html';
       }
 
     }).catch(function(error) {
@@ -44,6 +53,11 @@ $(function() {
 
   // register and share
   $('.btn-register').click(function() {
+    // disable button
+    $(this).text("loading...");
+    $(this).prop('disabled', true);
+    localStorage.loggedIn = "true";
+
     if(isMobile) {
       // console.log("MOBILE");
       firebase.auth().signInWithRedirect(provider);
@@ -56,9 +70,9 @@ $(function() {
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-        writeUserData(user.uid, user.displayName, user.email);
+        writeUserData(user.uid, user.displayName, user.email, token);
 
-        window.location.href = '/promise.html';
+        // window.location.href = '/promise.html';
 
       }).catch(function(error) {
         // Handle Errors here.
@@ -76,13 +90,46 @@ $(function() {
 
 
   // write data
-  function writeUserData(userId, name, email) {
-    database.ref('users/' + userId).set({
-      userName: name,
-      email: email,
-    });
-  }
+  function writeUserData(userId, name, email, token) {
+    // get FB Id
+    var fbId = "";
+    var updates = {};
 
+    $.ajax({
+      url: 'https://graph.facebook.com/me?fields=id&access_token=' + token,
+      success: function(response) {
+          // alert(response.id);
+          fbId = response.id;
+
+          // for callback
+          var ref = database.ref('users/' + userId);
+          ref.transaction(function(currentData) {
+            if (currentData === null) {
+              return { userName: name, email: email, token: token, fbId: fbId };
+              // return updates;
+            } else {
+              // console.log('User already exists.');
+              return; // Abort the transaction.
+            }
+          }, function(error, committed, snapshot) {
+            // if (error) {
+            //   console.log('Transaction failed abnormally!', error);
+            // } else if (!committed) {
+            //   console.log('We aborted the transaction (because ada already exists).');
+            // } else {
+            //   console.log('User added!');
+            // }
+            // console.log("data: ", snapshot.val());
+            window.location.href = '/promise.html';
+          });
+      }
+    });
+
+
+
+
+
+  }
 
 
 

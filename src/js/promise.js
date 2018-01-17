@@ -41,7 +41,6 @@ $(document).keypress(
 
 
 $(function() {
-  // console.log("USER: " + firebase.auth().currentUser);
 
   $.ajax({
     cache: false,
@@ -143,35 +142,69 @@ $(function() {
 
 
 
-
+  // console.log(prov
   // share function
-  function share(uid) {
-    // window.location.href = 'https://www.facebook.com/dialog/share?app_id=137706030341228&href=https://promiseappcom.firebaseapp.com/promise.html&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html';
+  function share(userId, fbId) {
+    // FB.api(
+    //     "/" + fbId + "/feed",
+    //     "POST",
+    //     {
+    //         "message": localStorage.daysTotal,
+    //         "link": "https://promise.davidlee.kr/share.html",
+    //         "privacy": { 'value': 'ALL_FRIENDS' },
+    //
+    //     },
+    //     function (response) {
+    //       if (response && !response.error) {
+    //         console.log(response);
+    //         console.log(response.error);
+    //       }
+    //     }
+    // );
+    //
+    // FB.api(
+    //     "/EAAB9Pi8FnGwBAI80YMXhCPeildIo7z8Abp0AdAVMNMQmYrl4VgCK6wrYJznHygJzo5spaWHSZC8HoCNyJwe8U7OO4RNBpkptIoySo87pig248rO9WewBtA6vAwlBNZBkOnThTSmh4QvGX0Rs6smVM0AJmCecMazVhgaiYXlwZDZD/feed",
+    //     "POST",
+    //     {
+    //         "message": "This is a test message"
+    //     },
+    //     function (response) {
+    //       if (response && !response.error) {
+    //         /* handle the result */
+    //         console.log(response);
+    //         console.log(response.error);
+    //       }
+    //     }
+    // );
+
+    // update meta tags
+    // $('meta[property="og:description"]').attr('content', 'test msg');
+
     if(isMobile) {
-      console.log("THIS IS MOBILE");
+      // console.log("THIS IS MOBILE");
 
       // update database
-      updatePromise(uid, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+      updatePromise(userId, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
 
-      var shareUrl = 'https://www.facebook.com/dialog/share?app_id=137706030341228&href=https://promise.davidlee.kr/share.html?promiseid=' + uid + '&redirect_uri=https://promise.davidlee.kr/checkin.html';
+      var shareUrl = 'https://www.facebook.com/dialog/share?app_id=137706030341228&href=https://promise.davidlee.kr/share.html?id=' + userId + '&redirect_uri=https://promise.davidlee.kr/checkin.html';
       // var shareUrl = "https://www.facebook.com/dialog/share?app_id=137706030341228&display=touch&href=https://promiseappcom.firebaseapp.com/&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
       window.location.href = shareUrl;
       // window.open(shareUrl);
 
 
     } else {
-      console.log("THIS IS DESKTOP");
+      // console.log("THIS IS DESKTOP");
 
       FB.ui({
         method: 'share',
-        href: 'https://promise.davidlee.kr/share.html'
+        href: 'https://promise.davidlee.kr/share.html?id=' + userId,
 
       }, function(response){
         if (response && !response.error_message) {
           localStorage.isFirstTime = true;
 
           // update database
-          updatePromise(uid, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+          updatePromise(userId, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
 
           // move to checkin page
           // console.log('Move to checkin page.');
@@ -231,14 +264,19 @@ $(function() {
         localStorage.unit = $('#formControlAmount2').val();
       }
 
-      console.log("SHARE");
+      // console.log("SHARE");
+      // get Fb Id
+      var fbId = "";
+      // console.log(firebase.auth().currentUser);
       var user = firebase.auth().currentUser;
-      if(user) {
-        share(user.uid);
-      } else {
-        console.log("USER ERROR");
-      }
-
+      firebase.database().ref('/users/' + user.uid).once('value').then(function(snapshot) {
+        fbId = snapshot.val().fbId;
+        // alert(fbId);
+        share(user.uid, fbId);
+      }, function(error) {
+        // The Promise was rejected.
+        console.error(error);
+      });
     }
 
 

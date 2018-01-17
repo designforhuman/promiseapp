@@ -4,6 +4,7 @@ window.fbAsyncInit = function() {
   FB.init({
     appId      : '137706030341228',
     status     : true,
+    cookie     : true,
     xfbml      : true,
     version    : 'v2.11',
   });
@@ -14,7 +15,7 @@ window.fbAsyncInit = function() {
    var js, fjs = d.getElementsByTagName(s)[0];
    if (d.getElementById(id)) {return;}
    js = d.createElement(s); js.id = id;
-   js.src = "https://connect.facebook.net/en_US/sdk.js";
+   js.src = "https://connect.facebook.net/kr_KO/sdk.js";
    fjs.parentNode.insertBefore(js, fjs);
  }(document, 'script', 'facebook-jssdk'));
 

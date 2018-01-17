@@ -1,4 +1,7 @@
 
+
+
+// function to read url variables
 $.param = function(name) {
   var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
   if(results == null) {
@@ -8,6 +11,7 @@ $.param = function(name) {
 }
 
 
+// on load
 $(function() {
 
   var _MS_PER_DAY = 1000 * 60 * 60 * 24; //86400000
@@ -38,29 +42,30 @@ $(function() {
 
   // read url
   var id = $.param('id');
+  if(id != null) {
+    database.ref('/checkins/' + id).once('value').then(function(snapshot) {
+      var val = snapshot.val();
+      var info = snapshot.child('info').val();
+      // console.log(value);
+      // console.log(snapshot.child('info').val());
+      var daysTotal = info.daysTotal;
+      var amount = info.amount;
+      var unit = info.unit;
+      var goal = info.goal;
+      var rewardOption = info.rewardOption;
+      var rewardInput = info.rewardInput;
+      var isFirstTime = val.isFirstTime;
+      var progressLog = val.progressLog;
 
-  database.ref('/checkins/' + id).once('value').then(function(snapshot) {
-    var val = snapshot.val();
-    var info = snapshot.child('info').val();
-    // console.log(value);
-    // console.log(snapshot.child('info').val());
-    var daysTotal = info.daysTotal;
-    var amount = info.amount;
-    var unit = info.unit;
-    var goal = info.goal;
-    var rewardOption = info.rewardOption;
-    var rewardInput = info.rewardInput;
-    var isFirstTime = val.isFirstTime;
-    var progressLog = val.progressLog;
+      // console.log(snapshot.val().amount);
+      $('.goal').text('목표: ' + daysTotal + '일간 매일 ' + amount + unit + ' ' + goal);
+      $('.reward').text(rewardOption + ' ' + rewardInput);
 
-    // console.log(snapshot.val().amount);
-    $('.goal').text('목표: ' + daysTotal + '일간 매일 ' + amount + unit + ' ' + goal);
-    $('.reward').text(rewardOption + ' ' + rewardInput);
-
-    fillProgressDots(daysTotal);
-    updateProgressDots(progressLog);
-    updateProgress(progressLog.length, (progressLog.length * 100) / localStorage.daysTotal);
-  });
+      fillProgressDots(daysTotal);
+      updateProgressDots(progressLog);
+      updateProgress(progressLog.length, (progressLog.length * 100) / localStorage.daysTotal);
+    });
+  }
 
 
 
