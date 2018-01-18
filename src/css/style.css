@@ -28,35 +28,35 @@
 }
 
 
-.btn-checkin-container {
+/* .btn-checkin-container {
   width: 320px;
   height: 320px;
   margin: auto;
-}
+} */
 
 
-.btn-checkin {
+/* .btn-checkin {
   width: 50%;
   height: 50%;
   margin: auto;
   font-size: 48px;
   font-weight: 200;
   background-color: #868E96;
-}
+} */
 
 
-.btn-checkin-enabled {
+/* .btn-checkin-enabled {
   background-color: #057BFF;
   -webkit-box-shadow: 0px 24px 88px -1px rgba(0,0,0,0.3);
   -moz-box-shadow: 0px 24px 88px -1px rgba(0,0,0,0.3);
   box-shadow: 0px 24px 88px -1px rgba(0,0,0,0.3);
-}
+} */
 
 
 .icon-check-container {
   margin: 0 auto;
   /* padding-top: 32px; */
-  color: rgba(255, 255, 255, 0.2)
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .icon-check-container-enabled {
@@ -64,7 +64,7 @@
 }
 
 
-
+/* */
 
 
 .checkInProgress {
@@ -81,27 +81,55 @@
 
 
 
-.progressDotContainer {
+.progress-dot-container {
   text-align: center;
   width: 100%;
   margin-bottom: 40px;
 }
 
 
-.progressDot {
+.progress-dot {
   margin: 0 auto;
   background-color: #EDEDED;
-  width: 60px;
-  height: 60px;
-  max-width: 60px;
-  max-height: 60px;
+  width: 72px;
+  height: 72px;
+  max-width: 72px;
+  max-height: 72px;
   border-radius: 50%;
 }
 
-.checkedIn {
-  background-color:
+/* .border-today-enabled {
+  border-style: solid;
+  border-color: #057BFF;
+  padding-top: 22px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
+.border-today-disabled {
+  border-style: solid;
+  border-color: #868E96;
+  padding-top: 20px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+} */
+
+
+.icon-check-container {
+  width: 72px;
+  height: 72px;
+  padding-top: 22px;
+}
+
+.icon-check-enabled {
+  color: #057BFF;
+}
+
+.icon-check-checked {
+  color: rgba(255, 255, 255, 0.3);
+}
 
 
 

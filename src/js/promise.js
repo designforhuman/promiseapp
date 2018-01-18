@@ -37,6 +37,82 @@ $(document).keypress(
 
 $(function() {
 
+  // console.log(prov
+  // share function
+  function share(userId, fbId) {
+    // FB.api(
+    //     "/" + fbId + "/feed",
+    //     "POST",
+    //     {
+    //         "message": localStorage.daysTotal,
+    //         "link": "https://promise.davidlee.kr/share.html",
+    //         "privacy": { 'value': 'ALL_FRIENDS' },
+    //
+    //     },
+    //     function (response) {
+    //       if (response && !response.error) {
+    //         console.log(response);
+    //         console.log(response.error);
+    //       }
+    //     }
+    // );
+
+    // FB.api(
+    //     "/EAAB9Pi8FnGwBAI80YMXhCPeildIo7z8Abp0AdAVMNMQmYrl4VgCK6wrYJznHygJzo5spaWHSZC8HoCNyJwe8U7OO4RNBpkptIoySo87pig248rO9WewBtA6vAwlBNZBkOnThTSmh4QvGX0Rs6smVM0AJmCecMazVhgaiYXlwZDZD/feed",
+    //     "POST",
+    //     {
+    //         "message": "This is a test message"
+    //     },
+    //     function (response) {
+    //       if (response && !response.error) {
+    //         /* handle the result */
+    //         console.log(response);
+    //         console.log(response.error);
+    //       }
+    //     }
+    // );
+
+    // update meta tags
+    // $('meta[property="og:description"]').attr('content', 'test msg');
+
+    if(isMobile) {
+      // console.log("THIS IS MOBILE");
+
+      // update database
+      updatePromise(userId, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+
+      var shareUrl = 'https://www.facebook.com/dialog/share?app_id=137706030341228&href=https://promiseapp.co/checkin.html?id=' + userId + '&redirect_uri=https://promiseapp.co/checkin.html';
+      // var shareUrl = "https://www.facebook.com/dialog/share?app_id=137706030341228&display=touch&href=https://promiseappcom.firebaseapp.com/&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
+      window.location.href = shareUrl;
+      // window.open(shareUrl);
+
+
+    } else {
+      // console.log("THIS IS DESKTOP");
+
+      FB.ui({
+        method: 'share',
+        href: 'https://promiseapp.co/checkin.html?id=' + userId,
+
+      }, function(response){
+        if (response && !response.error_message) {
+          localStorage.isFirstTime = true;
+
+          // update database
+          updatePromise(userId, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
+
+          // move to checkin page
+          // console.log('Move to checkin page.');
+          // window.open('checkin.html');
+          window.location.href = 'https://promiseapp.co/checkin.html';
+        } else {
+          // console.log('Error while posting.');
+        }
+      });
+    }
+  }
+
+
   $.ajax({
     cache: false,
     success: function(data) {
@@ -132,87 +208,6 @@ $(function() {
 
   selectedDaysTotalDOM.append( " 일간" );
   selectedAmountDOM.append( " 개씩" );
-
-
-
-
-  // console.log(prov
-  // share function
-  function share(userId, fbId) {
-    // FB.api(
-    //     "/" + fbId + "/feed",
-    //     "POST",
-    //     {
-    //         "message": localStorage.daysTotal,
-    //         "link": "https://promise.davidlee.kr/share.html",
-    //         "privacy": { 'value': 'ALL_FRIENDS' },
-    //
-    //     },
-    //     function (response) {
-    //       if (response && !response.error) {
-    //         console.log(response);
-    //         console.log(response.error);
-    //       }
-    //     }
-    // );
-    
-    // FB.api(
-    //     "/EAAB9Pi8FnGwBAI80YMXhCPeildIo7z8Abp0AdAVMNMQmYrl4VgCK6wrYJznHygJzo5spaWHSZC8HoCNyJwe8U7OO4RNBpkptIoySo87pig248rO9WewBtA6vAwlBNZBkOnThTSmh4QvGX0Rs6smVM0AJmCecMazVhgaiYXlwZDZD/feed",
-    //     "POST",
-    //     {
-    //         "message": "This is a test message"
-    //     },
-    //     function (response) {
-    //       if (response && !response.error) {
-    //         /* handle the result */
-    //         console.log(response);
-    //         console.log(response.error);
-    //       }
-    //     }
-    // );
-
-    // update meta tags
-    // $('meta[property="og:description"]').attr('content', 'test msg');
-
-    if(isMobile) {
-      // console.log("THIS IS MOBILE");
-
-      // update database
-      updatePromise(userId, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
-
-      var shareUrl = 'https://www.facebook.com/dialog/share?app_id=137706030341228&href=https://promise.davidlee.kr/share.html?id=' + userId + '&redirect_uri=https://promise.davidlee.kr/checkin.html';
-      // var shareUrl = "https://www.facebook.com/dialog/share?app_id=137706030341228&display=touch&href=https://promiseappcom.firebaseapp.com/&redirect_uri=https://promiseappcom.firebaseapp.com/checkin.html";
-      window.location.href = shareUrl;
-      // window.open(shareUrl);
-
-
-    } else {
-      // console.log("THIS IS DESKTOP");
-
-      FB.ui({
-        method: 'share',
-        href: 'https://promise.davidlee.kr/share.html?id=' + userId,
-
-      }, function(response){
-        if (response && !response.error_message) {
-          localStorage.isFirstTime = true;
-
-          // update database
-          updatePromise(userId, localStorage.goal, localStorage.daysTotal, selectedAmount, localStorage.unit, localStorage.rewardOption, localStorage.rewardInput, localStorage.isFirstTime);
-
-          // move to checkin page
-          // console.log('Move to checkin page.');
-          // window.open('checkin.html');
-          window.location.href = 'https://promise.davidlee.kr/checkin.html';
-        } else {
-          // console.log('Error while posting.');
-        }
-      });
-    }
-  }
-
-
-
 
 
   // save reward to localstorage
