@@ -79,10 +79,10 @@
         <div class="form-group">
           <!-- Button trigger modal -->
           <button type="button" class="btn-habit-category btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#modalHabit">
-            이것을...
+            목표를 선택하세요.
           </button>
           <div class="invalid-feedback">
-          목표를 선택해주세요.
+            목표를 선택하세요.
           </div>
 
           <!-- Modal -->
@@ -117,12 +117,14 @@
           </select>
         </div>
 
-        <div class="form-group d-none">
-          <select class="form-control" id="formControlAmount"></select>
+        <div class="form-group">
+          <select class="form-control" id="formControlAmount">
+            <option selected></option>
+          </select>
         </div>
 
         <div class="form-group d-none">
-          <input class="form-control mb-3" id="formControlAmount2" type="text" placeholder="예: 몇 개씩, 몇 분씩" required>
+          <input class="form-control mb-3" id="formControlAmount2" type="text" placeholder="예: 몇 개씩, 몇 분씩 (옵션)">
           <div class="invalid-feedback">
           내용을 입력해주세요.
           </div>
@@ -147,7 +149,7 @@
         </div>
 
         <div class="form-group">
-          <input required type="text" class="form-control" id="rewardInput" placeholder="이렇게 하겠습니다." >
+          <input type="text" class="form-control" id="rewardInput" placeholder="이렇게 하겠습니다." >
           <div class="invalid-feedback">
             실패하거나 성공했을 경우 할 것을 입력해주세요.
           </div>

@@ -83,13 +83,6 @@
 		"unit" : "번씩",
 		"everyday" : true
 	},
-	"overcomefear" : {
-		"controlName" : "overcomefear",
-		"name" : "두려움 극복하기",
-		"amount" : [1, 2, 3],
-		"unit" : "번씩",
-		"everyday" : true
-	},
 	"quitsmoking" : {
 		"controlName" : "quitsmoking",
 		"name" : "담배 끊기",

@@ -15,6 +15,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Opera Mobile|
 $('.btn-register').prop('disabled', true);
 
 
+
+
+
 $(function() {
   if(localStorage.loggedIn === "true") {
     $('.btn-register').text("loading...");
@@ -24,16 +27,28 @@ $(function() {
     $('.btn-register').prop('disabled', false);
   }
 
+
+
+  // database.ref()
+
+
+
   if(isMobile) {
     firebase.auth().getRedirectResult().then(function(result) {
-      if (result.credential) {
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        var token = result.credential.accessToken;
+      // send to checkin page if already singed up
+      ///////////////
 
+      if (result.credential) {
         // write user data async
         var user = result.user;
-        writeUserData(user.uid, user.displayName, user.email, token);
-
+        var token = result.credential.accessToken;
+        var fbId = 0;
+        var profilePhotoUrl = "";
+        user.providerData.forEach(function (profile) {
+          fbId = profile.uid;
+          profilePhotoUrl = profile.photoURL;
+        });
+        writeUserData(user.uid, user.displayName, user.email, token, fbId);
         // window.location.href = '/promise.html';
       }
 
@@ -66,13 +81,15 @@ $(function() {
     } else {
       // console.log("DESKTOP");
       firebase.auth().signInWithPopup(provider).then(function(result) {
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var token = result.credential.accessToken;
-        // The signed-in user info.
         var user = result.user;
-        writeUserData(user.uid, user.displayName, user.email, token);
-
-        // window.location.href = '/promise.html';
+        var fbId = 0;
+        var profilePhotoUrl = "";
+        user.providerData.forEach(function (profile) {
+          fbId = profile.uid;
+          profilePhotoUrl = profile.photoURL;
+        });
+        writeUserData(user.uid, user.displayName, user.email, token, fbId);
 
       }).catch(function(error) {
         // Handle Errors here.
@@ -90,45 +107,56 @@ $(function() {
 
 
   // write data
-  function writeUserData(userId, name, email, token) {
-    // get FB Id
-    var fbId = "";
-    var updates = {};
+  function writeUserData(userId, name, email, token, fbId) {
 
-    $.ajax({
-      url: 'https://graph.facebook.com/me?fields=id&access_token=' + token,
-      success: function(response) {
-          // alert(response.id);
-          fbId = response.id;
-
-          // for callback
-          var ref = database.ref('users/' + userId);
-          ref.transaction(function(currentData) {
-            if (currentData === null) {
-              return { userName: name, email: email, token: token, fbId: fbId };
-              // return updates;
-            } else {
-              // console.log('User already exists.');
-              return; // Abort the transaction.
-            }
-          }, function(error, committed, snapshot) {
-            // if (error) {
-            //   console.log('Transaction failed abnormally!', error);
-            // } else if (!committed) {
-            //   console.log('We aborted the transaction (because ada already exists).');
-            // } else {
-            //   console.log('User added!');
-            // }
-            // console.log("data: ", snapshot.val());
-            window.location.href = '/promise.html';
-          });
+    // for callback
+    var ref = database.ref('users/' + userId);
+    ref.transaction(function(currentData) {
+      if (currentData === null) {
+        return { userName: name, email: email, token: token, fbId: fbId };
+        // return updates;
+      } else {
+        // console.log('User already exists.');
+        return; // Abort the transaction.
       }
+    }, function(error, committed, snapshot) {
+      window.location.href = '/promise.html';
     });
 
 
-
-
-
+    // get FB Id
+    // var fbId = "";
+    // var updates = {};
+    //
+    // $.ajax({
+    //   url: 'https://graph.facebook.com/me?fields=id&access_token=' + token,
+    //   success: function(response) {
+    //       // alert(response.id);
+    //       fbId = response.id;
+    //
+    //       // for callback
+    //       var ref = database.ref('users/' + userId);
+    //       ref.transaction(function(currentData) {
+    //         if (currentData === null) {
+    //           return { userName: name, email: email, token: token, fbId: fbId };
+    //           // return updates;
+    //         } else {
+    //           // console.log('User already exists.');
+    //           return; // Abort the transaction.
+    //         }
+    //       }, function(error, committed, snapshot) {
+    //         // if (error) {
+    //         //   console.log('Transaction failed abnormally!', error);
+    //         // } else if (!committed) {
+    //         //   console.log('We aborted the transaction (because ada already exists).');
+    //         // } else {
+    //         //   console.log('User added!');
+    //         // }
+    //         // console.log("data: ", snapshot.val());
+    //         window.location.href = '/promise.html';
+    //       });
+    //   }
+    // });
   }
 
 

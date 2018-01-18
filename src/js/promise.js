@@ -1,11 +1,6 @@
 
 
 
-// facebook auth
-// var provider = new firebase.auth.FacebookAuthProvider();
-// provider.addScope('publish_actions, user_posts');
-
-
 
 // detect if it is mobile
 var isMobile = false;
@@ -24,7 +19,7 @@ var goalAmounts = [];
 var goalUnits = [];
 var goalIsEveryday = [];
 var goalIndices = [];
-var selectedAmount = 0;
+var selectedAmount = "";
 
 
 
@@ -128,16 +123,15 @@ $(function() {
 
 
   // variables
-  var selectedDaysTotal = $('#formControlDaysTotal option:selected');
-  var selectedAmount = $('#formControlAmount option:selected');
+  var selectedDaysTotalDOM = $('#formControlDaysTotal option:selected');
+  var selectedAmountDOM = $('#formControlAmount option:selected');
 
-  localStorage.daysTotal = selectedDaysTotal.val();
-  // selectedAmount = selectedAmount.val();
+  localStorage.daysTotal = selectedDaysTotalDOM.val();
   localStorage.unit = "";
   localStorage.isFirstTime = "false";
 
-  selectedDaysTotal.append( " 일간" );
-  selectedAmount.append( " 개씩" );
+  selectedDaysTotalDOM.append( " 일간" );
+  selectedAmountDOM.append( " 개씩" );
 
 
 
@@ -161,7 +155,7 @@ $(function() {
     //       }
     //     }
     // );
-    //
+    
     // FB.api(
     //     "/EAAB9Pi8FnGwBAI80YMXhCPeildIo7z8Abp0AdAVMNMQmYrl4VgCK6wrYJznHygJzo5spaWHSZC8HoCNyJwe8U7OO4RNBpkptIoySo87pig248rO9WewBtA6vAwlBNZBkOnThTSmh4QvGX0Rs6smVM0AJmCecMazVhgaiYXlwZDZD/feed",
     //     "POST",
@@ -239,12 +233,12 @@ $(function() {
       isValid = false;
     }
 
-    if( $('#formControlAmount2').is(':visible') && $('#formControlAmount2').val().length < 1 ) {
-      // if unit is visible and not typed...
-      $('#formControlAmount2').addClass('border-danger');
-      $('.invalid-feedback:eq(1)').show();
-      isValid = false;
-    }
+    // if( $('#formControlAmount2').is(':visible') && $('#formControlAmount2').val().length < 1 ) {
+    //   // if unit is visible and not typed...
+    //   $('#formControlAmount2').addClass('border-danger');
+    //   $('.invalid-feedback:eq(1)').show();
+    //   isValid = false;
+    // }
 
     if( $('#rewardInput').val().length < 1 ) {
       // if reward is not typed...
@@ -287,7 +281,8 @@ $(function() {
 
   $('#modalHabit .btn-primary').click(function() {
     if( $('#goalInput').val().length > 0 ) {
-      $('.btn-habit-category').text( $('#goalInput').val() + "를" );
+      localStorage.goal = $('#goalInput').val();
+      $('.btn-habit-category').text( localStorage.goal + "를" );
       $('.btn-habit-category').addClass('btn-outline-dark');
 
       if(!$('#formControlAmount').parent().hasClass('d-none')) {
@@ -333,11 +328,11 @@ $(function() {
     $('#formControlAmount option').each(function() {
       $(this).text( $(this).val() );
     });
-    var selectedOption = $('#formControlAmount option:selected')
-    selectedOption.append( " " + localStorage.unit );
+    selectedAmountDOM = $('#formControlAmount option:selected')
+    selectedAmountDOM.append( " " + localStorage.unit );
 
     // save to local storage for checkin screen
-    selectedAmount = selectedOption.val();
+    selectedAmount = selectedAmountDOM.val();
   });
 
 
